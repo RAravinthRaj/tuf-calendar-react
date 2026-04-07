@@ -1,0 +1,30 @@
+/* 
+© 2026 Aravinth Raj R. All rights reserved.
+Unauthorized copying of this file, via any medium, is strictly prohibited.
+Proprietary and confidential.  
+Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
+*/
+:root {
+  font-family: Inter, system-ui, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+@font-face {
+  font-family: "Source Serif Pro";
+  src: url("./assets/fonts/SourceSerif4-VariableFont_opsz\,wght.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
