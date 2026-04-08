@@ -43,6 +43,7 @@ export const HeroWrapper = styled.div<{ $direction: "next" | "prev" }>`
   max-height: 540px;
   overflow: hidden;
   border-radius: 20px 20px 0 0;
+  isolation: isolate;
   animation: ${({ $direction }) =>
     $direction === "next"
       ? css`${flipInNext} 520ms cubic-bezier(0.22, 1, 0.36, 1)`
@@ -64,6 +65,8 @@ export const HeroImage = styled.img`
   height: 100%;
   object-fit: cover;
   display: block;
+  transform: scale(1.02);
+  filter: saturate(1.04) contrast(1.02);
 `;
 
 export const WaveBase = styled.div`
@@ -74,6 +77,7 @@ export const WaveBase = styled.div`
   height: 124px;
   background: var(--sheet-bg);
   clip-path: path("M0 52 C 110 8, 210 8, 320 52 C 432 97, 548 98, 662 54 C 778 10, 892 10, 1008 54 C 1120 96, 1230 96, 1340 52 L 1340 180 L 0 180 Z");
+  z-index: 2;
 
   @media (max-width: 768px) {
     height: 64px;
@@ -88,6 +92,7 @@ export const WaveAccent = styled.div<{ $accentColor: string }>`
     linear-gradient(135deg, ${({ $accentColor }) => $accentColor} 0 50%, transparent 50% 100%) left bottom / 28% 100% no-repeat,
     linear-gradient(225deg, ${({ $accentColor }) => $accentColor} 0 52%, transparent 52% 100%) right bottom / 33% 100% no-repeat;
   pointer-events: none;
+  z-index: 3;
 
   @media (max-width: 768px) {
     height: 72px;

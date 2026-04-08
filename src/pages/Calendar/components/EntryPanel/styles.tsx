@@ -8,17 +8,18 @@ import styled from "styled-components";
 
 export const Panel = styled.div`
   min-height: 420px;
-  border-radius: 24px;
-  border: 1px solid var(--surface-border);
-  background: var(--surface);
-  padding: 18px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  box-shadow: none;
 
   @media (max-width: 640px) {
-    padding: 14px;
-    border-radius: 20px;
+    padding: 0;
+    border-radius: 0;
   }
 `;
 
@@ -32,14 +33,27 @@ export const NotesLayout = styled.div`
   }
 `;
 
+export const TargetGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 export const SectionCard = styled.section`
-  border-radius: 20px;
-  border: 1px solid var(--surface-border);
-  background: var(--surface-card);
+  border-radius: 22px;
+  border: 1px solid rgba(160, 131, 98, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 247, 235, 0.92)),
+    var(--surface-card);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  box-shadow: 0 10px 18px rgba(98, 73, 41, 0.05);
 
   @media (max-width: 640px) {
     padding: 14px;
@@ -63,6 +77,8 @@ export const SectionTitle = styled.h3`
   margin: 0;
   color: var(--text-strong);
   font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 `;
 
 export const SectionCaption = styled.div`
@@ -78,6 +94,10 @@ export const SectionCaption = styled.div`
 export const SegmentRow = styled.div`
   display: flex;
   gap: 8px;
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+  }
 `;
 
 export const SegmentButton = styled.button<{
@@ -111,8 +131,8 @@ export const EmptyState = styled.div`
 
 export const HintCard = styled.div`
   border-radius: 16px;
-  border: 1px dashed var(--surface-border);
-  background: var(--surface);
+  border: 1px dashed rgba(155, 126, 94, 0.24);
+  background: rgba(255, 252, 246, 0.86);
   padding: 12px 14px;
   color: var(--text-soft);
   font-size: 13px;
@@ -127,9 +147,12 @@ export const EntryList = styled.div`
 
 export const EntryCard = styled.div`
   border-radius: 18px;
-  border: 1px solid #e1d2be;
-  background: var(--surface-card);
+  border: 1px solid rgba(174, 141, 103, 0.2);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 248, 238, 0.92)),
+    var(--surface-card);
   padding: 14px;
+  box-shadow: 0 8px 16px rgba(92, 67, 37, 0.04);
 
   @media (max-width: 640px) {
     padding: 12px;
@@ -173,14 +196,15 @@ export const TextArea = styled.textarea`
   width: 100%;
   min-height: 160px;
   resize: vertical;
-  border: 1px solid var(--surface-border);
+  border: 1px solid rgba(156, 126, 92, 0.2);
   border-radius: 20px;
   outline: none;
   padding: 14px;
-  background: var(--surface-card);
+  background: rgba(255, 253, 248, 0.92);
   color: var(--text-strong);
   font: inherit;
   line-height: 1.5;
+  box-shadow: inset 0 1px 2px rgba(104, 77, 42, 0.04);
 
   @media (max-width: 640px) {
     min-height: 140px;
@@ -190,11 +214,11 @@ export const TextArea = styled.textarea`
 export const TextInput = styled.input`
   width: 100%;
   min-height: 48px;
-  border: 1px solid var(--surface-border);
+  border: 1px solid rgba(156, 126, 92, 0.2);
   border-radius: 16px;
   outline: none;
   padding: 0 14px;
-  background: var(--surface);
+  background: rgba(255, 253, 248, 0.92);
   color: var(--text-strong);
   font: inherit;
 `;
@@ -236,6 +260,7 @@ export const SaveButton = styled.button<{ $accentColor: string }>`
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.14);
 `;
 
 export const ErrorText = styled.div`
@@ -264,8 +289,8 @@ export const EntryActions = styled.div`
 `;
 
 export const ActionButton = styled.button`
-  border: 1px solid var(--control-border);
-  background: var(--control-bg);
+  border: 1px solid rgba(159, 129, 92, 0.18);
+  background: rgba(255, 251, 244, 0.92);
   color: var(--panel-text);
   border-radius: 999px;
   padding: 7px 10px;

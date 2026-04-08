@@ -69,6 +69,19 @@ export const TodayRail = styled.div<{ $accentColor: string }>`
   border-radius: 28px;
   padding: 20px 18px 18px;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: auto -20px -42px auto;
+    width: 120px;
+    height: 120px;
+    border-radius: 28px;
+    background: ${({ $accentColor }) => `${$accentColor}1c`};
+    transform: rotate(18deg);
+    pointer-events: none;
+  }
 
   @media (max-width: 920px) {
     display: grid;
@@ -224,6 +237,15 @@ export const TodayAction = styled.button<{ $accentColor: string }>`
 `;
 
 export const CalendarSection = styled.div<{ $direction: "next" | "prev" }>`
+  position: relative;
+  padding: 24px 22px 22px;
+  border-radius: 30px 30px 24px 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 248, 238, 0.84)),
+    var(--sheet-bg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 18px 34px rgba(85, 62, 31, 0.08);
   animation: ${({ $direction }) =>
     $direction === "next"
       ? css`
@@ -232,6 +254,21 @@ export const CalendarSection = styled.div<{ $direction: "next" | "prev" }>`
       : css`
           ${flipSlidePrev} 520ms cubic-bezier(0.22, 1, 0.36, 1)
         `};
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 14px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(171, 140, 104, 0.46), transparent);
+  }
+
+  @media (max-width: 768px) {
+    padding: 18px 14px 16px;
+    border-radius: 24px;
+  }
 `;
 
 export const Header = styled.div`
@@ -252,7 +289,7 @@ export const Title = styled.h3`
   margin: 0;
   font-size: clamp(1.6rem, 3vw, 2.15rem);
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--calendar-title);
 `;
@@ -320,7 +357,7 @@ export const Weekday = styled.div<{ $isWeekend: boolean }>`
 `;
 
 export const RangeToolbar = styled.div`
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -383,7 +420,7 @@ export const ClearRangeButton = styled.button`
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
 
   @media (max-width: 920px) {
     gap: 10px;
@@ -446,9 +483,10 @@ export const DateCell = styled.button<{
     $isSelected || $isRangeStart || $isRangeEnd
       ? "0 12px 24px rgba(0, 0, 0, 0.12)"
       : "none"};
+  backdrop-filter: blur(1px);
 
   &:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px) rotate(-1deg);
   }
 
   @media (max-width: 768px) {

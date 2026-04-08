@@ -109,6 +109,12 @@ export const EntryPanel = ({
       : attachedNoteScope === "range"
         ? selectedRangeLabel ?? "Select a date range on the calendar"
         : selectedDateLabel;
+  const dayAttachedNotes = selectedDayAttachedNotes.filter(
+    (note) => note.scope === "date" || note.scope === "month",
+  );
+  const rangeAttachedNotes = selectedDayAttachedNotes.filter(
+    (note) => note.scope === "range",
+  );
 
   const renderNotes = () => {
     return (
@@ -119,7 +125,7 @@ export const EntryPanel = ({
             <S.SectionCaption>{selectedDateLabel}</S.SectionCaption>
           </S.SectionHeader>
           {notes.length === 0 ? (
-            selectedDayAttachedNotes.length === 0 ? (
+            dayAttachedNotes.length === 0 ? (
               <S.EmptyState>No notes for this day yet.</S.EmptyState>
             ) : null
           ) : (
@@ -149,9 +155,9 @@ export const EntryPanel = ({
               ))}
             </S.EntryList>
           )}
-          {selectedDayAttachedNotes.length > 0 ? (
+          {dayAttachedNotes.length > 0 ? (
             <S.EntryList>
-              {selectedDayAttachedNotes.map((note) => (
+              {dayAttachedNotes.map((note) => (
                 <S.EntryCard key={note.id}>
                   <S.EntryHeader>
                     <div>
@@ -185,6 +191,49 @@ export const EntryPanel = ({
               ))}
             </S.EntryList>
           ) : null}
+        </S.SectionCard>
+
+        <S.SectionCard>
+          <S.SectionHeader>
+            <S.SectionTitle>Range Notes</S.SectionTitle>
+            <S.SectionCaption>
+              {selectedRangeLabel ?? "Notes linked to selected ranges"}
+            </S.SectionCaption>
+          </S.SectionHeader>
+          {rangeAttachedNotes.length === 0 ? (
+            <S.EmptyState>No range notes for this day.</S.EmptyState>
+          ) : (
+            <S.EntryList>
+              {rangeAttachedNotes.map((note) => (
+                <S.EntryCard key={note.id}>
+                  <S.EntryHeader>
+                    <div>
+                      <S.EntryText>{note.content}</S.EntryText>
+                      <S.EntryMeta>
+                        Range note: {note.startDateKey} to {note.endDateKey}
+                      </S.EntryMeta>
+                    </div>
+                    <S.EntryActions>
+                      <S.ActionButton onClick={() => onEditAttachedNote(note)}>
+                        Edit
+                      </S.ActionButton>
+                      <S.ActionButton onClick={() => onDeleteAttachedNote(note.id)}>
+                        Delete
+                      </S.ActionButton>
+                    </S.EntryActions>
+                  </S.EntryHeader>
+                  <S.EntryMeta>
+                    {new Date(note.createdAt).toLocaleString([], {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </S.EntryMeta>
+                </S.EntryCard>
+              ))}
+            </S.EntryList>
+          )}
         </S.SectionCard>
 
         <S.SectionCard>
@@ -342,42 +391,73 @@ export const EntryPanel = ({
 
   const renderAdd = () => {
     return (
-      <>
-        <S.SegmentRow>
-          {addOptions.map((option) => (
-            <S.SegmentButton
-              key={option.key}
-              $active={addMode === option.key}
-              $accentColor={accentColor}
-              onClick={() => onAddModePress(option.key)}
-            >
-              {option.label}
-            </S.SegmentButton>
-          ))}
-        </S.SegmentRow>
-        <S.TextArea
-          value={draft}
-          onChange={(event) => onDraftChange(event.target.value)}
-          placeholder={addMode === "note" ? "Write note" : "Write task"}
-        />
-        <S.HintCard>{addTargetLabel}</S.HintCard>
-        {editingLabel ? <S.EntryMeta>{editingLabel}</S.EntryMeta> : null}
-        {errorMessage ? <S.ErrorText>{errorMessage}</S.ErrorText> : null}
-        <S.FooterRow>
-          <S.SaveButton $accentColor={accentColor} onClick={onSave}>
-            {editingLabel
-              ? addMode === "note"
-                ? "Update Note"
-                : "Update Task"
-              : addMode === "note"
-                ? "Add Note"
-                : "Add Task"}
-          </S.SaveButton>
-          {editingLabel ? (
-            <S.SecondaryButton onClick={onCancelEdit}>Cancel</S.SecondaryButton>
-          ) : null}
-        </S.FooterRow>
-      </>
+      <S.NotesLayout>
+        <S.TargetGrid>
+          <S.SectionCard>
+            <S.SectionHeader>
+              <S.SectionTitle>Particular Date</S.SectionTitle>
+              <S.SectionCaption>{selectedDateLabel}</S.SectionCaption>
+            </S.SectionHeader>
+            <S.HintCard>
+              Add a {addMode === "note" ? "note" : "task"} only for the selected
+              day.
+            </S.HintCard>
+          </S.SectionCard>
+          <S.SectionCard>
+            <S.SectionHeader>
+              <S.SectionTitle>Selected Range</S.SectionTitle>
+              <S.SectionCaption>
+                {selectedRangeLabel ?? "Select a range on the calendar"}
+              </S.SectionCaption>
+            </S.SectionHeader>
+            <S.HintCard>
+              {hasActiveRange
+                ? `Add across the selected range when the range is complete.`
+                : "Choose a start date and end date to add across multiple days."}
+            </S.HintCard>
+          </S.SectionCard>
+        </S.TargetGrid>
+
+        <S.SectionCard>
+          <S.SectionHeader>
+            <S.SectionTitle>Task / Note Composer</S.SectionTitle>
+            <S.SectionCaption>{editingLabel ?? addTargetLabel}</S.SectionCaption>
+          </S.SectionHeader>
+          <S.SegmentRow>
+            {addOptions.map((option) => (
+              <S.SegmentButton
+                key={option.key}
+                $active={addMode === option.key}
+                $accentColor={accentColor}
+                onClick={() => onAddModePress(option.key)}
+              >
+                {option.label}
+              </S.SegmentButton>
+            ))}
+          </S.SegmentRow>
+          <S.TextArea
+            value={draft}
+            onChange={(event) => onDraftChange(event.target.value)}
+            placeholder={addMode === "note" ? "Write note" : "Write task"}
+          />
+          <S.HintCard>{addTargetLabel}</S.HintCard>
+          {errorMessage ? <S.ErrorText>{errorMessage}</S.ErrorText> : null}
+          <S.FooterRow>
+            <S.SaveButton $accentColor={accentColor} onClick={onSave}>
+              {editingLabel
+                ? addMode === "note"
+                  ? "Update Note"
+                  : "Update Task"
+                : addMode === "note"
+                  ? "Add Note"
+                  : "Add Task"}
+            </S.SaveButton>
+            {editingLabel ? (
+              <S.SecondaryButton onClick={onCancelEdit}>Cancel</S.SecondaryButton>
+            ) : null}
+          </S.FooterRow>
+        </S.SectionCard>
+      </S.NotesLayout>
     );
   };
 
