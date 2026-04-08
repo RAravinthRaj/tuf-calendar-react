@@ -47,6 +47,7 @@ import {
 
 const CalendarPage = () => {
   const theme = useTheme();
+  const { calendarPage } = CALENDAR_CONFIG.content;
   const {
     selectedDateKey,
     visibleMonthKey,
@@ -641,7 +642,7 @@ const CalendarPage = () => {
           padding: "24px",
         }}
       >
-        <Loader loadingText="Loading calendar..." />
+        <Loader loadingText={calendarPage.loaderText} />
       </div>
     );
   }
@@ -849,7 +850,7 @@ const CalendarPage = () => {
                     textTransform: "uppercase",
                   }}
                 >
-                  Holiday
+                  {calendarPage.holidayOverlay.badgeLabel}
                 </div>
                 <h3
                   style={{
@@ -858,7 +859,7 @@ const CalendarPage = () => {
                     color: "#2f2418",
                   }}
                 >
-                  Today's Holiday
+                  {calendarPage.holidayOverlay.title}
                 </h3>
                 <p
                   style={{
@@ -877,7 +878,8 @@ const CalendarPage = () => {
                     lineHeight: 1.6,
                   }}
                 >
-                  {selectedDateLabel} is marked as a holiday. Enjoy the moment.
+                  {selectedDateLabel}{" "}
+                  {calendarPage.holidayOverlay.descriptionSuffix}
                 </p>
                 <button
                   style={{
@@ -892,7 +894,7 @@ const CalendarPage = () => {
                   }}
                   onClick={() => setShowHolidayCelebration(false)}
                 >
-                  Continue
+                  {calendarPage.holidayOverlay.continueButton}
                 </button>
               </div>
             </div>
