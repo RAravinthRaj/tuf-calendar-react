@@ -278,6 +278,67 @@ export const Weekday = styled.div<{ $isWeekend: boolean }>`
   text-transform: uppercase;
 `;
 
+export const RangeToolbar = styled.div`
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+`;
+
+export const RangeLegend = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+export const RangeLegendItem = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--weekday);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+`;
+
+export const RangeLegendSwatch = styled.span<{
+  $accentColor: string;
+  $variant: "start" | "end" | "between";
+}>`
+  width: 14px;
+  height: 14px;
+  border-radius: ${({ $variant }) => ($variant === "between" ? "4px" : "999px")};
+  border: 1px solid
+    ${({ $accentColor, $variant }) =>
+      $variant === "between" ? `${$accentColor}66` : `${$accentColor}dd`};
+  background: ${({ $accentColor, $variant }) =>
+    $variant === "between" ? `${$accentColor}22` : `${$accentColor}cc`};
+  box-shadow: ${({ $variant }) =>
+    $variant === "between" ? "none" : "0 4px 10px rgba(0, 0, 0, 0.08)"};
+`;
+
+export const RangeHint = styled.div`
+  color: var(--text-soft);
+  font-size: 12px;
+`;
+
+export const ClearRangeButton = styled.button`
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--panel-text);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+`;
+
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -292,25 +353,50 @@ export const DateCell = styled.button<{
   $isSelected: boolean;
   $isCurrentMonth: boolean;
   $isToday: boolean;
+  $isRangeStart: boolean;
+  $isRangeEnd: boolean;
+  $isInRange: boolean;
   $accentColor: string;
 }>`
+  position: relative;
   min-height: 72px;
   padding: 10px 6px;
   border: 1px solid
-    ${({ $isSelected, $isToday, $accentColor }) =>
-      $isSelected ? $accentColor : $isToday ? "#c9a473" : "transparent"};
-  background: ${({ $isSelected, $accentColor }) =>
-    $isSelected ? $accentColor : "transparent"};
-  color: ${({ $isSelected, $isCurrentMonth }) =>
-    $isSelected ? "#fff" : $isCurrentMonth ? "var(--text-strong)" : "#8d8d8d"};
-  border-radius: 18px;
+    ${({ $isSelected, $isToday, $isRangeStart, $isRangeEnd, $isInRange, $accentColor }) =>
+      $isSelected || $isRangeStart || $isRangeEnd
+        ? `${$accentColor}ee`
+        : $isInRange
+          ? `${$accentColor}66`
+          : $isToday
+            ? "#c9a473"
+            : "transparent"};
+  background: ${({ $isSelected, $isRangeStart, $isRangeEnd, $isInRange, $accentColor }) =>
+    $isSelected
+      ? $accentColor
+      : $isRangeStart || $isRangeEnd
+        ? `${$accentColor}d8`
+        : $isInRange
+          ? `${$accentColor}1f`
+          : "transparent"};
+  color: ${({ $isSelected, $isRangeStart, $isRangeEnd, $isCurrentMonth }) =>
+    $isSelected || $isRangeStart || $isRangeEnd
+      ? "#ffffff"
+      : $isCurrentMonth
+        ? "var(--text-strong)"
+        : "#8d8d8d"};
+  border-radius: ${({ $isRangeStart, $isRangeEnd, $isInRange }) =>
+    $isInRange && !$isRangeStart && !$isRangeEnd ? "12px" : "18px"};
   text-align: center;
   cursor: pointer;
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease;
-  box-shadow: ${({ $isSelected }) =>
-    $isSelected ? "0 12px 24px rgba(0, 0, 0, 0.12)" : "none"};
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+  box-shadow: ${({ $isSelected, $isRangeStart, $isRangeEnd }) =>
+    $isSelected || $isRangeStart || $isRangeEnd
+      ? "0 12px 24px rgba(0, 0, 0, 0.12)"
+      : "none"};
 
   &:hover {
     transform: translateY(-1px);
@@ -329,8 +415,49 @@ export const DateNumber = styled.div`
   line-height: 1.1;
 `;
 
+export const TodayMarker = styled.span<{ $isSelected: boolean }>`
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: ${({ $isSelected }) => ($isSelected ? "#ffffff" : "#c9a473")};
+  box-shadow: 0 0 0 3px rgba(201, 164, 115, 0.18);
+
+  @media (max-width: 768px) {
+    top: 5px;
+    right: 5px;
+    width: 6px;
+    height: 6px;
+  }
+`;
+
+export const HolidayMarker = styled.span<{ $isSelected: boolean }>`
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: ${({ $isSelected }) =>
+    $isSelected ? "rgba(255, 255, 255, 0.22)" : "#f4d792"};
+  color: ${({ $isSelected }) => ($isSelected ? "#ffffff" : "#7b4d00")};
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    font-size: 8px;
+    bottom: 5px;
+    padding: 1px 4px;
+  }
+`;
+
 export const CountLabel = styled.div`
-  margin-top: 8px;
+  margin-top: 6px;
   min-height: 12px;
   display: flex;
   align-items: center;

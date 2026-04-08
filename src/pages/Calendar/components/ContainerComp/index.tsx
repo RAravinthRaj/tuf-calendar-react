@@ -12,8 +12,10 @@ export interface IContainerComp {
   monthGrid: ReactNode;
   panelTabs: ReactNode;
   panelContent: ReactNode;
+  overlayContent?: ReactNode;
   selectedDateLabel: string;
   themeLabel: string;
+  themeMode: "light" | "dark";
   onThemeToggle: () => void;
   mobilePanelOpen: boolean;
   onCloseMobilePanel: () => void;
@@ -25,8 +27,10 @@ export const ContainerComp = ({
   monthGrid,
   panelTabs,
   panelContent,
+  overlayContent,
   selectedDateLabel,
   themeLabel,
+  themeMode,
   onThemeToggle,
   mobilePanelOpen,
   onCloseMobilePanel,
@@ -53,7 +57,9 @@ export const ContainerComp = ({
         <S.SidePanel>
           <S.PanelHeader>
             <S.PanelDate>{selectedDateLabel}</S.PanelDate>
-            <S.ThemeChip onClick={onThemeToggle}>{themeLabel}</S.ThemeChip>
+            <S.ThemeChip $themeMode={themeMode} onClick={onThemeToggle}>
+              {themeLabel}
+            </S.ThemeChip>
           </S.PanelHeader>
           {panelTabs}
           {panelContent}
@@ -63,21 +69,26 @@ export const ContainerComp = ({
       {mobilePanelOpen ? (
         <S.MobilePanelOverlay onClick={onCloseMobilePanel}>
           <S.MobilePanelSheet onClick={(event) => event.stopPropagation()}>
-            <S.MobilePanelClose
-              onClick={onCloseMobilePanel}
-              aria-label="Close mobile panel"
-            >
-              ×
-            </S.MobilePanelClose>
-            <S.PanelHeader>
-              <S.PanelDate>{selectedDateLabel}</S.PanelDate>
-              <S.ThemeChip onClick={onThemeToggle}>{themeLabel}</S.ThemeChip>
-            </S.PanelHeader>
+            <S.MobilePanelTopBar>
+              <S.PanelHeader>
+                <S.PanelDate>{selectedDateLabel}</S.PanelDate>
+                <S.ThemeChip $themeMode={themeMode} onClick={onThemeToggle}>
+                  {themeLabel}
+                </S.ThemeChip>
+              </S.PanelHeader>
+              <S.MobilePanelClose
+                onClick={onCloseMobilePanel}
+                aria-label="Close mobile panel"
+              >
+                ×
+              </S.MobilePanelClose>
+            </S.MobilePanelTopBar>
             {panelTabs}
             {panelContent}
           </S.MobilePanelSheet>
         </S.MobilePanelOverlay>
       ) : null}
+      {overlayContent}
     </S.Page>
   );
 };

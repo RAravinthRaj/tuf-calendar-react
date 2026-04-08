@@ -16,10 +16,13 @@ export interface IMonthGrid {
   accentColor: string;
   direction: "next" | "prev";
   todayTasks: CalendarTask[];
+  hasActiveRange: boolean;
+  holidayCount: number;
   onOpenTask: () => void;
   onAddTodayTask: () => void;
   onPreviousMonth: () => void;
   onNextMonth: () => void;
+  onClearRange: () => void;
   onSelectDate: (date: Date) => void;
 }
 
@@ -31,10 +34,13 @@ export const MonthGrid = ({
   accentColor,
   direction,
   todayTasks,
+  hasActiveRange,
+  holidayCount,
   onOpenTask,
   onAddTodayTask,
   onPreviousMonth,
   onNextMonth,
+  onClearRange,
   onSelectDate,
 }: IMonthGrid) => {
   return (
@@ -94,6 +100,35 @@ export const MonthGrid = ({
           ))}
         </S.Weekdays>
 
+        <S.RangeToolbar>
+          <S.RangeLegend>
+            <S.RangeLegendItem>
+              <S.RangeLegendSwatch $accentColor={accentColor} $variant="start" />
+              Start
+            </S.RangeLegendItem>
+            <S.RangeLegendItem>
+              <S.RangeLegendSwatch $accentColor={accentColor} $variant="end" />
+              End
+            </S.RangeLegendItem>
+            <S.RangeLegendItem>
+              <S.RangeLegendSwatch
+                $accentColor={accentColor}
+                $variant="between"
+              />
+              In Range
+            </S.RangeLegendItem>
+          </S.RangeLegend>
+          {hasActiveRange ? (
+            <S.ClearRangeButton onClick={onClearRange}>
+              Clear Range
+            </S.ClearRangeButton>
+          ) : (
+            <S.RangeHint>
+              Pick a start day, then an end day. Holidays this month: {holidayCount}
+            </S.RangeHint>
+          )}
+        </S.RangeToolbar>
+
         <S.Grid>
           {days.map((day) => {
             const count = entryCounts[day.dateKey] ?? 0;
@@ -104,10 +139,17 @@ export const MonthGrid = ({
                 $isSelected={day.isSelected}
                 $isCurrentMonth={day.isCurrentMonth}
                 $isToday={day.isToday}
+                $isRangeStart={day.isRangeStart}
+                $isRangeEnd={day.isRangeEnd}
+                $isInRange={day.isInRange}
                 $accentColor={accentColor}
                 onClick={() => onSelectDate(day.date)}
               >
                 <S.DateNumber>{day.date.getDate()}</S.DateNumber>
+                {day.isHoliday ? (
+                  <S.HolidayMarker $isSelected={day.isSelected}>Holiday</S.HolidayMarker>
+                ) : null}
+                {day.isToday ? <S.TodayMarker $isSelected={day.isSelected} /> : null}
                 <S.CountLabel>
                   {count > 0 ? (
                     <S.Dot

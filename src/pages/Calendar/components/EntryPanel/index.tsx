@@ -8,26 +8,54 @@ import {
   CalendarAddOptionKey,
   CalendarTabKey,
 } from "../../config";
-import { CalendarNote, CalendarTask } from "../../services";
+import {
+  CalendarAttachedNote,
+  CalendarNote,
+  CalendarNoteScope,
+  CalendarTask,
+} from "../../services";
 import * as S from "./styles";
 
 export interface IEntryPanel {
   activeTab: CalendarTabKey;
   addMode: CalendarAddOptionKey;
   notes: CalendarNote[];
+  selectedDayAttachedNotes: CalendarAttachedNote[];
   tasks: CalendarTask[];
+  attachedNotes: CalendarAttachedNote[];
   draft: string;
+  attachedNoteDraft: string;
+  attachedNoteScope: CalendarNoteScope;
   accentColor: string;
   addOptions: Array<{ key: CalendarAddOptionKey; label: string }>;
   errorMessage: string | null;
   editingLabel: string | null;
+  attachedNoteError: string | null;
+  attachedNoteEditingLabel: string | null;
+  monthLabel: string;
+  selectedDateLabel: string;
+  selectedRangeLabel: string | null;
+  hasActiveRange: boolean;
+  addTargetLabel: string;
+  holidayDraft: string;
+  holidayLabel: string | null;
+  holidayError: string | null;
   onDraftChange: (value: string) => void;
+  onAttachedNoteDraftChange: (value: string) => void;
+  onAttachedNoteScopeChange: (scope: CalendarNoteScope) => void;
+  onHolidayDraftChange: (value: string) => void;
   onAddModePress: (mode: CalendarAddOptionKey) => void;
   onSave: () => void;
   onCancelEdit: () => void;
+  onSaveAttachedNote: () => void;
+  onCancelAttachedNoteEdit: () => void;
+  onSaveHoliday: () => void;
+  onDeleteHoliday: () => void;
   onToggleTask: (taskId: string) => void;
   onEditNote: (noteId: string, content: string) => void;
   onDeleteNote: (noteId: string) => void;
+  onEditAttachedNote: (note: CalendarAttachedNote) => void;
+  onDeleteAttachedNote: (noteId: string) => void;
   onEditTask: (taskId: string, title: string) => void;
   onDeleteTask: (taskId: string) => void;
 }
@@ -36,51 +64,238 @@ export const EntryPanel = ({
   activeTab,
   addMode,
   notes,
+  selectedDayAttachedNotes,
   tasks,
+  attachedNotes,
   draft,
+  attachedNoteDraft,
+  attachedNoteScope,
   accentColor,
   addOptions,
   errorMessage,
   editingLabel,
+  attachedNoteError,
+  attachedNoteEditingLabel,
+  monthLabel,
+  selectedDateLabel,
+  selectedRangeLabel,
+  hasActiveRange,
+  addTargetLabel,
+  holidayDraft,
+  holidayLabel,
+  holidayError,
   onDraftChange,
+  onAttachedNoteDraftChange,
+  onAttachedNoteScopeChange,
+  onHolidayDraftChange,
   onAddModePress,
   onSave,
   onCancelEdit,
+  onSaveAttachedNote,
+  onCancelAttachedNoteEdit,
+  onSaveHoliday,
+  onDeleteHoliday,
   onToggleTask,
   onEditNote,
   onDeleteNote,
+  onEditAttachedNote,
+  onDeleteAttachedNote,
   onEditTask,
   onDeleteTask,
 }: IEntryPanel) => {
-  const renderNotes = () => {
-    if (notes.length === 0) {
-      return <S.EmptyState>No notes</S.EmptyState>;
-    }
+  const attachedScopeLabel =
+    attachedNoteScope === "month"
+      ? monthLabel
+      : attachedNoteScope === "range"
+        ? selectedRangeLabel ?? "Select a date range on the calendar"
+        : selectedDateLabel;
 
+  const renderNotes = () => {
     return (
-      <S.EntryList>
-        {notes.map((note) => (
-          <S.EntryCard key={note.id}>
-            <S.EntryHeader>
-              <S.EntryText>{note.content}</S.EntryText>
-              <S.EntryActions>
-                <S.ActionButton onClick={() => onEditNote(note.id, note.content)}>
-                  Edit
-                </S.ActionButton>
-                <S.ActionButton onClick={() => onDeleteNote(note.id)}>
-                  Delete
-                </S.ActionButton>
-              </S.EntryActions>
-            </S.EntryHeader>
-            <S.EntryMeta>
-              {new Date(note.createdAt).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </S.EntryMeta>
-          </S.EntryCard>
-        ))}
-      </S.EntryList>
+      <S.NotesLayout>
+        <S.SectionCard>
+          <S.SectionHeader>
+            <S.SectionTitle>Selected Day Notes</S.SectionTitle>
+            <S.SectionCaption>{selectedDateLabel}</S.SectionCaption>
+          </S.SectionHeader>
+          {notes.length === 0 ? (
+            selectedDayAttachedNotes.length === 0 ? (
+              <S.EmptyState>No notes for this day yet.</S.EmptyState>
+            ) : null
+          ) : (
+            <S.EntryList>
+              {notes.map((note) => (
+                <S.EntryCard key={note.id}>
+                  <S.EntryHeader>
+                    <S.EntryText>{note.content}</S.EntryText>
+                    <S.EntryActions>
+                      <S.ActionButton
+                        onClick={() => onEditNote(note.id, note.content)}
+                      >
+                        Edit
+                      </S.ActionButton>
+                      <S.ActionButton onClick={() => onDeleteNote(note.id)}>
+                        Delete
+                      </S.ActionButton>
+                    </S.EntryActions>
+                  </S.EntryHeader>
+                  <S.EntryMeta>
+                    {new Date(note.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </S.EntryMeta>
+                </S.EntryCard>
+              ))}
+            </S.EntryList>
+          )}
+          {selectedDayAttachedNotes.length > 0 ? (
+            <S.EntryList>
+              {selectedDayAttachedNotes.map((note) => (
+                <S.EntryCard key={note.id}>
+                  <S.EntryHeader>
+                    <div>
+                      <S.EntryText>{note.content}</S.EntryText>
+                      <S.EntryMeta>
+                        {note.scope === "range"
+                          ? `Range note: ${note.startDateKey} to ${note.endDateKey}`
+                          : note.scope === "month"
+                            ? `Month memo for ${monthLabel}`
+                            : "Selected date note"}
+                      </S.EntryMeta>
+                    </div>
+                    <S.EntryActions>
+                      <S.ActionButton onClick={() => onEditAttachedNote(note)}>
+                        Edit
+                      </S.ActionButton>
+                      <S.ActionButton onClick={() => onDeleteAttachedNote(note.id)}>
+                        Delete
+                      </S.ActionButton>
+                    </S.EntryActions>
+                  </S.EntryHeader>
+                  <S.EntryMeta>
+                    {new Date(note.createdAt).toLocaleString([], {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </S.EntryMeta>
+                </S.EntryCard>
+              ))}
+            </S.EntryList>
+          ) : null}
+        </S.SectionCard>
+
+        <S.SectionCard>
+          <S.SectionHeader>
+            <S.SectionTitle>Holiday Marker</S.SectionTitle>
+            <S.SectionCaption>{selectedDateLabel}</S.SectionCaption>
+          </S.SectionHeader>
+          <S.TextInput
+            value={holidayDraft}
+            onChange={(event) => onHolidayDraftChange(event.target.value)}
+            placeholder="Example: Founders' Day"
+          />
+          {holidayLabel ? (
+            <S.HintCard>Marked as holiday: {holidayLabel}</S.HintCard>
+          ) : (
+            <S.HintCard>
+              Pick a date and give it a holiday label to show a popup and confetti
+              when that day is opened.
+            </S.HintCard>
+          )}
+          {holidayError ? <S.ErrorText>{holidayError}</S.ErrorText> : null}
+          <S.FooterRow>
+            <S.SaveButton $accentColor={accentColor} onClick={onSaveHoliday}>
+              {holidayLabel ? "Update Holiday" : "Save Holiday"}
+            </S.SaveButton>
+            {holidayLabel ? (
+              <S.SecondaryButton onClick={onDeleteHoliday}>
+                Remove Holiday
+              </S.SecondaryButton>
+            ) : null}
+          </S.FooterRow>
+        </S.SectionCard>
+
+        <S.SectionCard>
+          <S.SectionHeader>
+            <S.SectionTitle>Integrated Notes</S.SectionTitle>
+            <S.SectionCaption>{attachedScopeLabel}</S.SectionCaption>
+          </S.SectionHeader>
+          <S.ScopeRow>
+            {([
+              { key: "month", label: "Month Memo" },
+              { key: "date", label: "Selected Date" },
+              { key: "range", label: "Selected Range" },
+            ] as Array<{ key: CalendarNoteScope; label: string }>).map((option) => (
+              <S.ScopeButton
+                key={option.key}
+                $active={attachedNoteScope === option.key}
+                $accentColor={accentColor}
+                onClick={() => onAttachedNoteScopeChange(option.key)}
+              >
+                {option.label}
+              </S.ScopeButton>
+            ))}
+          </S.ScopeRow>
+          {attachedNoteScope === "range" && !hasActiveRange ? (
+            <S.HintCard>
+              Select a start date and an end date on the grid to attach a note
+              to a range.
+            </S.HintCard>
+          ) : null}
+          <S.TextArea
+            value={attachedNoteDraft}
+            onChange={(event) => onAttachedNoteDraftChange(event.target.value)}
+            placeholder={`Write a note for ${attachedScopeLabel}`}
+          />
+          {attachedNoteEditingLabel ? (
+            <S.EntryMeta>{attachedNoteEditingLabel}</S.EntryMeta>
+          ) : null}
+          {attachedNoteError ? <S.ErrorText>{attachedNoteError}</S.ErrorText> : null}
+          <S.FooterRow>
+            <S.SaveButton $accentColor={accentColor} onClick={onSaveAttachedNote}>
+              {attachedNoteEditingLabel ? "Update Note" : "Save Note"}
+            </S.SaveButton>
+            {attachedNoteEditingLabel ? (
+              <S.SecondaryButton onClick={onCancelAttachedNoteEdit}>
+                Cancel
+              </S.SecondaryButton>
+            ) : null}
+          </S.FooterRow>
+
+          {attachedNotes.length === 0 ? (
+            <S.EmptyState>No attached notes in this section yet.</S.EmptyState>
+          ) : (
+            <S.EntryList>
+              {attachedNotes.map((note) => (
+                <S.EntryCard key={note.id}>
+                  <S.EntryHeader>
+                    <S.EntryText>{note.content}</S.EntryText>
+                    <S.EntryActions>
+                      <S.ActionButton onClick={() => onEditAttachedNote(note)}>
+                        Edit
+                      </S.ActionButton>
+                      <S.ActionButton onClick={() => onDeleteAttachedNote(note.id)}>
+                        Delete
+                      </S.ActionButton>
+                    </S.EntryActions>
+                  </S.EntryHeader>
+                  <S.EntryMeta>
+                    {new Date(note.createdAt).toLocaleString([], {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </S.EntryMeta>
+                </S.EntryCard>
+              ))}
+            </S.EntryList>
+          )}
+        </S.SectionCard>
+      </S.NotesLayout>
     );
   };
 
@@ -145,6 +360,7 @@ export const EntryPanel = ({
           onChange={(event) => onDraftChange(event.target.value)}
           placeholder={addMode === "note" ? "Write note" : "Write task"}
         />
+        <S.HintCard>{addTargetLabel}</S.HintCard>
         {editingLabel ? <S.EntryMeta>{editingLabel}</S.EntryMeta> : null}
         {errorMessage ? <S.ErrorText>{errorMessage}</S.ErrorText> : null}
         <S.FooterRow>

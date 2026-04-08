@@ -17,6 +17,41 @@ export const Panel = styled.div`
   gap: 12px;
 `;
 
+export const NotesLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+export const SectionCard = styled.section`
+  border-radius: 20px;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-card);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const SectionHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+export const SectionTitle = styled.h3`
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 15px;
+`;
+
+export const SectionCaption = styled.div`
+  color: var(--text-soft);
+  font-size: 12px;
+  text-align: right;
+`;
+
 export const SegmentRow = styled.div`
   display: flex;
   gap: 8px;
@@ -39,7 +74,7 @@ export const SegmentButton = styled.button<{
 `;
 
 export const EmptyState = styled.div`
-  min-height: 280px;
+  min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,6 +83,16 @@ export const EmptyState = styled.div`
   border-radius: 20px;
   color: var(--muted);
   font-size: 14px;
+`;
+
+export const HintCard = styled.div`
+  border-radius: 16px;
+  border: 1px dashed var(--surface-border);
+  background: var(--surface);
+  padding: 12px 14px;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.5;
 `;
 
 export const EntryList = styled.div`
@@ -98,7 +143,7 @@ export const TaskText = styled.div<{ $completed: boolean }>`
 
 export const TextArea = styled.textarea`
   width: 100%;
-  min-height: 220px;
+  min-height: 160px;
   resize: vertical;
   border: 1px solid var(--surface-border);
   border-radius: 20px;
@@ -108,6 +153,40 @@ export const TextArea = styled.textarea`
   color: var(--text-strong);
   font: inherit;
   line-height: 1.5;
+`;
+
+export const TextInput = styled.input`
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  outline: none;
+  padding: 0 14px;
+  background: var(--surface);
+  color: var(--text-strong);
+  font: inherit;
+`;
+
+export const ScopeRow = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
+
+export const ScopeButton = styled.button<{
+  $active: boolean;
+  $accentColor: string;
+}>`
+  border-radius: 999px;
+  border: 1px solid
+    ${({ $active, $accentColor }) => ($active ? $accentColor : "#ddcdb7")};
+  background: ${({ $active, $accentColor }) =>
+    $active ? `${$accentColor}20` : "var(--control-bg)"};
+  color: var(--panel-text);
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
 `;
 
 export const SaveButton = styled.button<{ $accentColor: string }>`

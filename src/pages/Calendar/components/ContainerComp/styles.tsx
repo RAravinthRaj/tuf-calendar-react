@@ -174,15 +174,17 @@ export const PanelDate = styled.h2`
   font-family: "Source Serif Pro", Georgia, serif;
 `;
 
-export const ThemeChip = styled.button`
-  border: 1px solid var(--control-border);
-  background: var(--control-bg);
-  color: var(--panel-text);
+export const ThemeChip = styled.button<{ $themeMode: "light" | "dark" }>`
+  border: 1px solid
+    ${({ $themeMode }) => ($themeMode === "light" ? "#141414" : "#f5f1e8")};
+  background: ${({ $themeMode }) =>
+    $themeMode === "light" ? "#141414" : "#f5f1e8"};
+  color: ${({ $themeMode }) => ($themeMode === "light" ? "#ffffff" : "#141414")};
   border-radius: 999px;
   padding: 10px 14px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
 `;
@@ -215,15 +217,23 @@ export const MobilePanelSheet = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  position: relative;
+`;
+
+export const MobilePanelTopBar = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  ${PanelHeader} {
+    flex: 1;
+  }
 `;
 
 export const MobilePanelClose = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
   width: 34px;
   height: 34px;
+  flex: 0 0 34px;
   border: 1px solid var(--control-border);
   border-radius: 999px;
   background: var(--control-bg);

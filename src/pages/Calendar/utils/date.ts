@@ -10,6 +10,10 @@ export interface CalendarDayItem {
   isCurrentMonth: boolean;
   isSelected: boolean;
   isToday: boolean;
+  isRangeStart: boolean;
+  isRangeEnd: boolean;
+  isInRange: boolean;
+  isHoliday: boolean;
 }
 
 export const formatDateKey = (date: Date) => {
@@ -47,6 +51,9 @@ export const isSameDate = (left: Date, right: Date) =>
 export const getCalendarDays = (
   visibleMonthKey: string,
   selectedDateKey: string,
+  rangeStartDateKey?: string | null,
+  rangeEndDateKey?: string | null,
+  holidayDateKeys: string[] = [],
 ) => {
   const visibleMonthDate = getMonthDateFromKey(visibleMonthKey);
   const monthStart = new Date(
@@ -56,6 +63,18 @@ export const getCalendarDays = (
   );
   const gridStart = new Date(monthStart);
   const today = new Date();
+  const normalizedRangeStartDateKey =
+    rangeStartDateKey && rangeEndDateKey
+      ? rangeStartDateKey <= rangeEndDateKey
+        ? rangeStartDateKey
+        : rangeEndDateKey
+      : rangeStartDateKey ?? null;
+  const normalizedRangeEndDateKey =
+    rangeStartDateKey && rangeEndDateKey
+      ? rangeStartDateKey <= rangeEndDateKey
+        ? rangeEndDateKey
+        : rangeStartDateKey
+      : rangeEndDateKey ?? null;
 
   gridStart.setDate(monthStart.getDate() - monthStart.getDay());
 
@@ -70,8 +89,34 @@ export const getCalendarDays = (
       isCurrentMonth: date.getMonth() === visibleMonthDate.getMonth(),
       isSelected: dateKey === selectedDateKey,
       isToday: isSameDate(date, today),
+      isRangeStart: dateKey === normalizedRangeStartDateKey,
+      isRangeEnd: dateKey === normalizedRangeEndDateKey,
+      isInRange:
+        !!normalizedRangeStartDateKey &&
+        !!normalizedRangeEndDateKey &&
+        dateKey > normalizedRangeStartDateKey &&
+        dateKey < normalizedRangeEndDateKey,
+      isHoliday: holidayDateKeys.includes(dateKey),
     };
   });
+};
+
+export const getDateKeysInRange = (startDateKey: string, endDateKey: string) => {
+  const fromDate = getDateFromKey(
+    startDateKey <= endDateKey ? startDateKey : endDateKey,
+  );
+  const toDate = getDateFromKey(
+    startDateKey <= endDateKey ? endDateKey : startDateKey,
+  );
+  const dateKeys: string[] = [];
+  const cursor = new Date(fromDate);
+
+  while (cursor <= toDate) {
+    dateKeys.push(formatDateKey(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return dateKeys;
 };
 
 export const getNextMonthSelectedDate = (
