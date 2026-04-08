@@ -37,9 +37,14 @@ const flipSlidePrev = keyframes`
 
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: minmax(160px, 220px) 1fr;
-  gap: 28px;
-  margin-top: 20px;
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+  gap: 30px;
+  margin-top: 18px;
+
+  @media (max-width: 920px) {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
 
   @media (max-width: 680px) {
     grid-template-columns: 1fr;
@@ -48,7 +53,6 @@ export const Wrapper = styled.div`
 `;
 
 export const TodayRail = styled.div<{ $accentColor: string }>`
-  padding-top: 26px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -62,9 +66,22 @@ export const TodayRail = styled.div<{ $accentColor: string }>`
     ),
     var(--surface-card);
   border: 1px solid var(--surface-border);
-  border-radius: 24px;
-  padding: 18px 16px 16px;
+  border-radius: 28px;
+  padding: 20px 18px 18px;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+
+  @media (max-width: 920px) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px 18px;
+    align-items: start;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    border-radius: 22px;
+    padding: 16px;
+  }
 `;
 
 export const TodayHead = styled.div`
@@ -139,6 +156,10 @@ export const TodayList = styled.div`
   flex-direction: column;
   gap: 10px;
   min-height: 190px;
+
+  @media (max-width: 920px) {
+    min-height: 0;
+  }
 `;
 
 export const TodayEmpty = styled.div`
@@ -191,6 +212,15 @@ export const TodayAction = styled.button<{ $accentColor: string }>`
     transform: translateY(-1px);
     box-shadow: 0 18px 30px rgba(0, 0, 0, 0.18);
   }
+
+  @media (max-width: 920px) {
+    margin-top: 0;
+    align-self: start;
+  }
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 export const CalendarSection = styled.div<{ $direction: "next" | "prev" }>`
@@ -210,6 +240,12 @@ export const Header = styled.div`
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 22px;
+
+  @media (max-width: 640px) {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
 `;
 
 export const Title = styled.h3`
@@ -265,6 +301,11 @@ export const Weekdays = styled.div`
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 16px;
+
+  @media (max-width: 640px) {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
 `;
 
 export const Weekday = styled.div<{ $isWeekend: boolean }>`
@@ -344,8 +385,16 @@ export const Grid = styled.div`
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 14px;
 
+  @media (max-width: 920px) {
+    gap: 10px;
+  }
+
   @media (max-width: 768px) {
     gap: 8px;
+  }
+
+  @media (max-width: 560px) {
+    gap: 6px;
   }
 `;
 
@@ -359,8 +408,8 @@ export const DateCell = styled.button<{
   $accentColor: string;
 }>`
   position: relative;
-  min-height: 72px;
-  padding: 10px 6px;
+  min-height: 82px;
+  padding: 12px 7px;
   border: 1px solid
     ${({ $isSelected, $isToday, $isRangeStart, $isRangeEnd, $isInRange, $accentColor }) =>
       $isSelected || $isRangeStart || $isRangeEnd
@@ -403,9 +452,15 @@ export const DateCell = styled.button<{
   }
 
   @media (max-width: 768px) {
-    min-height: 48px;
-    padding: 6px 4px;
+    min-height: 58px;
+    padding: 8px 4px;
     border-radius: 12px;
+  }
+
+  @media (max-width: 560px) {
+    min-height: 52px;
+    padding: 8px 3px;
+    border-radius: 10px;
   }
 `;
 
@@ -413,6 +468,10 @@ export const DateNumber = styled.div`
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.1;
+
+  @media (max-width: 560px) {
+    font-size: 0.84rem;
+  }
 `;
 
 export const TodayMarker = styled.span<{ $isSelected: boolean }>`
@@ -453,6 +512,10 @@ export const HolidayMarker = styled.span<{ $isSelected: boolean }>`
     font-size: 8px;
     bottom: 5px;
     padding: 1px 4px;
+  }
+
+  @media (max-width: 560px) {
+    display: none;
   }
 `;
 

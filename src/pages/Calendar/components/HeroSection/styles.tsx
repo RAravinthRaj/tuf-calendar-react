@@ -42,13 +42,20 @@ export const HeroWrapper = styled.div<{ $direction: "next" | "prev" }>`
   min-height: 0;
   max-height: 540px;
   overflow: hidden;
+  border-radius: 20px 20px 0 0;
   animation: ${({ $direction }) =>
     $direction === "next"
       ? css`${flipInNext} 520ms cubic-bezier(0.22, 1, 0.36, 1)`
       : css`${flipInPrev} 520ms cubic-bezier(0.22, 1, 0.36, 1)`};
 
+  @media (max-width: 1100px) {
+    max-height: 460px;
+  }
+
   @media (max-width: 768px) {
-    max-height: 260px;
+    aspect-ratio: 16 / 10;
+    max-height: 320px;
+    border-radius: 22px 22px 0 0;
   }
 `;
 
@@ -69,7 +76,7 @@ export const WaveBase = styled.div`
   clip-path: path("M0 52 C 110 8, 210 8, 320 52 C 432 97, 548 98, 662 54 C 778 10, 892 10, 1008 54 C 1120 96, 1230 96, 1340 52 L 1340 180 L 0 180 Z");
 
   @media (max-width: 768px) {
-    height: 72px;
+    height: 64px;
   }
 `;
 
@@ -83,6 +90,6 @@ export const WaveAccent = styled.div<{ $accentColor: string }>`
   pointer-events: none;
 
   @media (max-width: 768px) {
-    height: 82px;
+    height: 72px;
   }
 `;

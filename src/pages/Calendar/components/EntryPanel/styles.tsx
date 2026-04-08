@@ -11,26 +11,40 @@ export const Panel = styled.div`
   border-radius: 24px;
   border: 1px solid var(--surface-border);
   background: var(--surface);
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  @media (max-width: 640px) {
+    padding: 14px;
+    border-radius: 20px;
+  }
 `;
 
 export const NotesLayout = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  @media (min-width: 1200px) {
+    gap: 16px;
+  }
 `;
 
 export const SectionCard = styled.section`
   border-radius: 20px;
   border: 1px solid var(--surface-border);
   background: var(--surface-card);
-  padding: 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  @media (max-width: 640px) {
+    padding: 14px;
+    border-radius: 18px;
+  }
 `;
 
 export const SectionHeader = styled.div`
@@ -38,6 +52,11 @@ export const SectionHeader = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 6px;
+  }
 `;
 
 export const SectionTitle = styled.h3`
@@ -50,6 +69,10 @@ export const SectionCaption = styled.div`
   color: var(--text-soft);
   font-size: 12px;
   text-align: right;
+
+  @media (max-width: 640px) {
+    text-align: left;
+  }
 `;
 
 export const SegmentRow = styled.div`
@@ -65,7 +88,8 @@ export const SegmentButton = styled.button<{
   border-radius: 999px;
   border: 1px solid
     ${({ $active, $accentColor }) => ($active ? $accentColor : "#ddcdb7")};
-  background: ${({ $active, $accentColor }) => ($active ? `${$accentColor}20` : "var(--control-bg)")};
+  background: ${({ $active, $accentColor }) =>
+    $active ? `${$accentColor}20` : "var(--control-bg)"};
   color: var(--panel-text);
   padding: 10px 12px;
   font-size: 13px;
@@ -106,6 +130,10 @@ export const EntryCard = styled.div`
   border: 1px solid #e1d2be;
   background: var(--surface-card);
   padding: 14px;
+
+  @media (max-width: 640px) {
+    padding: 12px;
+  }
 `;
 
 export const EntryText = styled.div`
@@ -153,6 +181,10 @@ export const TextArea = styled.textarea`
   color: var(--text-strong);
   font: inherit;
   line-height: 1.5;
+
+  @media (max-width: 640px) {
+    min-height: 140px;
+  }
 `;
 
 export const TextInput = styled.input`
@@ -171,6 +203,11 @@ export const ScopeRow = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+
+  @media (max-width: 560px) {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ScopeButton = styled.button<{
@@ -210,12 +247,20 @@ export const EntryHeader = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 12px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
 `;
 
 export const EntryActions = styled.div`
   display: flex;
   gap: 8px;
   align-items: flex-start;
+
+  @media (max-width: 560px) {
+    flex-wrap: wrap;
+  }
 `;
 
 export const ActionButton = styled.button`
@@ -235,6 +280,11 @@ export const FooterRow = styled.div`
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+
+  @media (max-width: 560px) {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const SecondaryButton = styled.button`

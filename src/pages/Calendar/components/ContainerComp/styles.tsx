@@ -53,32 +53,43 @@ const tearPagePrev = keyframes`
 
 export const Page = styled.main`
   min-height: 100vh;
-  padding: 22px 20px;
+  padding: 24px 22px 30px;
   background:
     radial-gradient(circle at top, var(--app-radial), transparent 34%),
+    radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.2), transparent 18%),
     var(--app-bg);
 
   @media (max-width: 768px) {
-    padding: 10px;
+    padding: 12px 10px 24px;
   }
 `;
 
 export const MainContainer = styled.section`
-  max-width: 1700px;
+  max-width: 1720px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.9fr) minmax(320px, 0.82fr);
-  gap: 26px;
+  grid-template-columns: minmax(0, 1.8fr) minmax(340px, 0.86fr);
+  gap: 28px;
   align-items: start;
 
-  @media (max-width: 1120px) {
+  @media (max-width: 1220px) {
+    grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.95fr);
+    gap: 22px;
+  }
+
+  @media (max-width: 980px) {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 `;
 
 export const WallSheet = styled.div`
   position: relative;
   padding-top: 36px;
+
+  @media (max-width: 980px) {
+    padding-top: 28px;
+  }
 `;
 
 export const Binder = styled.div`
@@ -113,7 +124,7 @@ export const Binder = styled.div`
 `;
 
 export const CalendarCard = styled.div<{ $direction: "next" | "prev" }>`
-  border-radius: 8px;
+  border-radius: 18px;
   overflow: hidden;
   background: var(--sheet-bg);
   box-shadow:
@@ -124,13 +135,21 @@ export const CalendarCard = styled.div<{ $direction: "next" | "prev" }>`
     $direction === "next"
       ? css`${tearPageNext} 700ms cubic-bezier(0.2, 0.9, 0.2, 1)`
       : css`${tearPagePrev} 700ms cubic-bezier(0.2, 0.9, 0.2, 1)`};
+
+  @media (max-width: 980px) {
+    border-radius: 22px;
+  }
 `;
 
 export const ContentSection = styled.div`
-  padding: 0 34px 30px;
+  padding: 0 30px 30px;
+
+  @media (max-width: 1100px) {
+    padding: 0 22px 24px;
+  }
 
   @media (max-width: 768px) {
-    padding: 0 12px 14px;
+    padding: 0 14px 18px;
   }
 `;
 
@@ -153,9 +172,19 @@ export const SidePanel = styled.aside`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow: auto;
 
-  @media (max-width: 768px) {
-    display: none;
+  @media (max-width: 980px) {
+    position: static;
+    top: auto;
+    max-height: none;
+    overflow: visible;
+    border-radius: 24px;
+    padding: 16px;
+    gap: 14px;
   }
 `;
 
@@ -164,6 +193,11 @@ export const PanelHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+
+  @media (max-width: 640px) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 `;
 
 export const PanelDate = styled.h2`
@@ -187,6 +221,11 @@ export const ThemeChip = styled.button<{ $themeMode: "light" | "dark" }>`
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
+
+  @media (max-width: 640px) {
+    align-self: stretch;
+    min-height: 42px;
+  }
 `;
 
 export const MobilePanelOverlay = styled.div`
@@ -199,10 +238,6 @@ export const MobilePanelOverlay = styled.div`
   padding: 12px;
   background: rgba(25, 18, 10, 0.44);
   backdrop-filter: blur(8px);
-
-  @media (max-width: 768px) {
-    display: flex;
-  }
 `;
 
 export const MobilePanelSheet = styled.div`

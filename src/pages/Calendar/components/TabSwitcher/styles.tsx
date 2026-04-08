@@ -10,6 +10,10 @@ export const Row = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const Button = styled.button<{ $active: boolean; $accentColor: string }>`
@@ -23,4 +27,8 @@ export const Button = styled.button<{ $active: boolean; $accentColor: string }>`
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+
+  @media (max-width: 560px) {
+    min-height: 44px;
+  }
 `;
