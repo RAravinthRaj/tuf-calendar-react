@@ -4,6 +4,7 @@ Unauthorized copying of this file, via any medium, is strictly prohibited.
 Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
+import { CALENDAR_CONFIG } from "../../config";
 import { CalendarTask } from "../../services";
 import { CalendarDayItem } from "../../../../utils/date";
 import * as S from "./styles";
@@ -122,7 +123,9 @@ export const MonthGrid = ({
               >
                 <S.DateNumber>{day.date.getDate()}</S.DateNumber>
                 {day.isHoliday ? (
-                  <S.HolidayMarker $isSelected={day.isSelected}>Holiday</S.HolidayMarker>
+                  <S.HolidayMarker $isSelected={day.isSelected}>
+                    {CALENDAR_CONFIG.content.monthGrid.holidayMarker}
+                  </S.HolidayMarker>
                 ) : null}
                 {day.isToday ? <S.TodayMarker $isSelected={day.isSelected} /> : null}
                 <S.CountLabel>

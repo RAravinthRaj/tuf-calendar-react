@@ -32,6 +32,15 @@ export const CALENDAR_CONFIG = {
     { key: "december", label: "December", accent: "#5A86B3" },
   ] as const,
   content: {
+    calendarPage: {
+      loaderText: "Loading calendar...",
+      holidayOverlay: {
+        badgeLabel: "Holiday",
+        title: "Today's Holiday",
+        descriptionSuffix: "is marked as a holiday. Enjoy the moment.",
+        continueButton: "Continue",
+      },
+    },
     container: {
       closeMobilePanelAriaLabel: "Close mobile panel",
     },
