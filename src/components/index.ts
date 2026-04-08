@@ -5,3 +5,4 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 export * from "./Loader";
+export * from "./Error";

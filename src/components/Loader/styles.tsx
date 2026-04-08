@@ -36,25 +36,13 @@ export const LottieLoader = styled(Lottie)<{ $useModalLoader: boolean }>`
   width: ${(props) => (props?.$useModalLoader ? "100px" : "400px")};
   height: ${(props) => (props?.$useModalLoader ? "100px" : "400px")};
 
-  @media (max-width: 576px) {
-    width: ${(props) => (props?.$useModalLoader ? "100px" : "300px")};
-    height: ${(props) => (props?.$useModalLoader ? "100px" : "300px")};
+  @media (max-width: 768px) {
+    width: ${(props) => (props?.$useModalLoader ? "100px" : "250px")};
+    height: ${(props) => (props?.$useModalLoader ? "100px" : "250px")};
   }
-`;
-
-export const LoadingText = styled.div<{ $useModalLoader: boolean }>`
-  margin: ${(props) => (props?.$useModalLoader ? "0 0 0 10px" : "-50px 0 0 0")};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-  font-size: ${(props) => (props?.$useModalLoader ? "16px" : "18px")};
-  letter-spacing: 0.2px;
-  white-space: pre-line;
-  text-align: center;
 
   @media (max-width: 576px) {
-    margin: ${(props) =>
-      props?.$useModalLoader ? "0 0 0 10px" : "-30px 0 0 0"};
+    width: ${(props) => (props?.$useModalLoader ? "100px" : "180px")};
+    height: ${(props) => (props?.$useModalLoader ? "100px" : "180px")};
   }
 `;
