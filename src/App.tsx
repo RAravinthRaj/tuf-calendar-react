@@ -4,13 +4,13 @@ Unauthorized copying of this file, via any medium, is strictly prohibited.
 Proprietary and confidential.  
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
-import { Loader } from "./components";
 import { ThemeProvider } from "./hooks";
+import CalendarPage from "./pages/Calendar/Calendar";
 
 const App = () => {
   return (
     <ThemeProvider>
-      <Loader />
+      <CalendarPage />
     </ThemeProvider>
   );
 };
