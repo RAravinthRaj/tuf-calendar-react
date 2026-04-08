@@ -5,7 +5,8 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import { create } from "zustand";
-import CalendarService, { CalendarMonthEntries } from "../services";
+import CalendarService from "../services";
+import { CalendarMonthEntries } from "../../../db";
 
 type State = {
   fetchMonthEntriesLoading: boolean;

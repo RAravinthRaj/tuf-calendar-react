@@ -5,6 +5,7 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import { ReactNode } from "react";
+import { CALENDAR_CONFIG } from "../../config";
 import * as S from "./styles";
 
 export interface IContainerComp {
@@ -36,6 +37,8 @@ export const ContainerComp = ({
   onCloseMobilePanel,
   direction,
 }: IContainerComp) => {
+  const { container } = CALENDAR_CONFIG.content;
+
   return (
     <S.Page>
       <S.MainContainer>
@@ -78,7 +81,7 @@ export const ContainerComp = ({
               </S.PanelHeader>
               <S.MobilePanelClose
                 onClick={onCloseMobilePanel}
-                aria-label="Close mobile panel"
+                aria-label={container.closeMobilePanelAriaLabel}
               >
                 ×
               </S.MobilePanelClose>

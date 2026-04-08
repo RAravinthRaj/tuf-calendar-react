@@ -10,7 +10,7 @@ import {
   getDateEntries,
   readCalendarDB,
   writeCalendarDB,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export interface UpdateTaskParams {
   dateKey: string;

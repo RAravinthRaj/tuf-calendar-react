@@ -5,13 +5,13 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import {
+  buildCalendarId,
   CalendarApiResponse,
   CalendarNote,
-  buildCalendarId,
   getDateEntries,
   readCalendarDB,
   writeCalendarDB,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export interface AddNoteParams {
   dateKey: string;
@@ -45,7 +45,6 @@ export const addNote = async ({
     },
   });
 
-  return {
-    payload: notes,
-  };
+  return { payload: notes };
 };
+

@@ -5,6 +5,7 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import {
+  CALENDAR_CONFIG,
   CalendarAddOptionKey,
   CalendarTabKey,
 } from "../../config";
@@ -103,11 +104,12 @@ export const EntryPanel = ({
   onEditTask,
   onDeleteTask,
 }: IEntryPanel) => {
+  const { entryPanel } = CALENDAR_CONFIG.content;
   const attachedScopeLabel =
     attachedNoteScope === "month"
       ? monthLabel
       : attachedNoteScope === "range"
-        ? selectedRangeLabel ?? "Select a date range on the calendar"
+        ? selectedRangeLabel ?? entryPanel.attachedScopeFallback
         : selectedDateLabel;
   const dayAttachedNotes = selectedDayAttachedNotes.filter(
     (note) => note.scope === "date" || note.scope === "month",
@@ -121,12 +123,12 @@ export const EntryPanel = ({
       <S.NotesLayout>
         <S.SectionCard>
           <S.SectionHeader>
-            <S.SectionTitle>Selected Day Notes</S.SectionTitle>
+            <S.SectionTitle>{entryPanel.sections.selectedDayNotes}</S.SectionTitle>
             <S.SectionCaption>{selectedDateLabel}</S.SectionCaption>
           </S.SectionHeader>
           {notes.length === 0 ? (
             dayAttachedNotes.length === 0 ? (
-              <S.EmptyState>No notes for this day yet.</S.EmptyState>
+              <S.EmptyState>{entryPanel.emptyStates.noDayNotes}</S.EmptyState>
             ) : null
           ) : (
             <S.EntryList>
@@ -164,10 +166,10 @@ export const EntryPanel = ({
                       <S.EntryText>{note.content}</S.EntryText>
                       <S.EntryMeta>
                         {note.scope === "range"
-                          ? `Range note: ${note.startDateKey} to ${note.endDateKey}`
+                          ? `${entryPanel.noteMeta.rangePrefix} ${note.startDateKey} ${entryPanel.noteMeta.rangeConnector} ${note.endDateKey}`
                           : note.scope === "month"
-                            ? `Month memo for ${monthLabel}`
-                            : "Selected date note"}
+                            ? `${entryPanel.noteMeta.monthMemoPrefix} ${monthLabel}`
+                            : entryPanel.noteMeta.selectedDateNote}
                       </S.EntryMeta>
                     </div>
                     <S.EntryActions>
@@ -195,13 +197,13 @@ export const EntryPanel = ({
 
         <S.SectionCard>
           <S.SectionHeader>
-            <S.SectionTitle>Range Notes</S.SectionTitle>
+            <S.SectionTitle>{entryPanel.sections.rangeNotes}</S.SectionTitle>
             <S.SectionCaption>
-              {selectedRangeLabel ?? "Notes linked to selected ranges"}
+              {selectedRangeLabel ?? entryPanel.noteMeta.rangeNotesCaptionFallback}
             </S.SectionCaption>
           </S.SectionHeader>
           {rangeAttachedNotes.length === 0 ? (
-            <S.EmptyState>No range notes for this day.</S.EmptyState>
+            <S.EmptyState>{entryPanel.emptyStates.noRangeNotes}</S.EmptyState>
           ) : (
             <S.EntryList>
               {rangeAttachedNotes.map((note) => (
@@ -210,7 +212,8 @@ export const EntryPanel = ({
                     <div>
                       <S.EntryText>{note.content}</S.EntryText>
                       <S.EntryMeta>
-                        Range note: {note.startDateKey} to {note.endDateKey}
+                        {entryPanel.noteMeta.rangePrefix} {note.startDateKey}{" "}
+                        {entryPanel.noteMeta.rangeConnector} {note.endDateKey}
                       </S.EntryMeta>
                     </div>
                     <S.EntryActions>
@@ -238,30 +241,31 @@ export const EntryPanel = ({
 
         <S.SectionCard>
           <S.SectionHeader>
-            <S.SectionTitle>Holiday Marker</S.SectionTitle>
+            <S.SectionTitle>{entryPanel.sections.holidayMarker}</S.SectionTitle>
             <S.SectionCaption>{selectedDateLabel}</S.SectionCaption>
           </S.SectionHeader>
           <S.TextInput
             value={holidayDraft}
             onChange={(event) => onHolidayDraftChange(event.target.value)}
-            placeholder="Example: Founders' Day"
+            placeholder={entryPanel.holiday.inputPlaceholder}
           />
           {holidayLabel ? (
-            <S.HintCard>Marked as holiday: {holidayLabel}</S.HintCard>
-          ) : (
             <S.HintCard>
-              Pick a date and give it a holiday label to show a popup and confetti
-              when that day is opened.
+              {entryPanel.holiday.markedPrefix} {holidayLabel}
             </S.HintCard>
+          ) : (
+            <S.HintCard>{entryPanel.holiday.hint}</S.HintCard>
           )}
           {holidayError ? <S.ErrorText>{holidayError}</S.ErrorText> : null}
           <S.FooterRow>
             <S.SaveButton $accentColor={accentColor} onClick={onSaveHoliday}>
-              {holidayLabel ? "Update Holiday" : "Save Holiday"}
+              {holidayLabel
+                ? entryPanel.holiday.updateButton
+                : entryPanel.holiday.saveButton}
             </S.SaveButton>
             {holidayLabel ? (
               <S.SecondaryButton onClick={onDeleteHoliday}>
-                Remove Holiday
+                {entryPanel.holiday.removeButton}
               </S.SecondaryButton>
             ) : null}
           </S.FooterRow>
@@ -269,15 +273,14 @@ export const EntryPanel = ({
 
         <S.SectionCard>
           <S.SectionHeader>
-            <S.SectionTitle>Integrated Notes</S.SectionTitle>
+            <S.SectionTitle>{entryPanel.sections.integratedNotes}</S.SectionTitle>
             <S.SectionCaption>{attachedScopeLabel}</S.SectionCaption>
           </S.SectionHeader>
           <S.ScopeRow>
-            {([
-              { key: "month", label: "Month Memo" },
-              { key: "date", label: "Selected Date" },
-              { key: "range", label: "Selected Range" },
-            ] as Array<{ key: CalendarNoteScope; label: string }>).map((option) => (
+            {(entryPanel.attachedNotes.scopeOptions as ReadonlyArray<{
+              key: CalendarNoteScope;
+              label: string;
+            }>).map((option) => (
               <S.ScopeButton
                 key={option.key}
                 $active={attachedNoteScope === option.key}
@@ -289,15 +292,12 @@ export const EntryPanel = ({
             ))}
           </S.ScopeRow>
           {attachedNoteScope === "range" && !hasActiveRange ? (
-            <S.HintCard>
-              Select a start date and an end date on the grid to attach a note
-              to a range.
-            </S.HintCard>
+            <S.HintCard>{entryPanel.attachedNotes.rangeHint}</S.HintCard>
           ) : null}
           <S.TextArea
             value={attachedNoteDraft}
             onChange={(event) => onAttachedNoteDraftChange(event.target.value)}
-            placeholder={`Write a note for ${attachedScopeLabel}`}
+            placeholder={`${entryPanel.attachedNotes.textAreaPlaceholderPrefix} ${attachedScopeLabel}`}
           />
           {attachedNoteEditingLabel ? (
             <S.EntryMeta>{attachedNoteEditingLabel}</S.EntryMeta>
@@ -305,17 +305,19 @@ export const EntryPanel = ({
           {attachedNoteError ? <S.ErrorText>{attachedNoteError}</S.ErrorText> : null}
           <S.FooterRow>
             <S.SaveButton $accentColor={accentColor} onClick={onSaveAttachedNote}>
-              {attachedNoteEditingLabel ? "Update Note" : "Save Note"}
+              {attachedNoteEditingLabel
+                ? entryPanel.attachedNotes.updateButton
+                : entryPanel.attachedNotes.saveButton}
             </S.SaveButton>
             {attachedNoteEditingLabel ? (
               <S.SecondaryButton onClick={onCancelAttachedNoteEdit}>
-                Cancel
+                {entryPanel.attachedNotes.cancelButton}
               </S.SecondaryButton>
             ) : null}
           </S.FooterRow>
 
           {attachedNotes.length === 0 ? (
-            <S.EmptyState>No attached notes in this section yet.</S.EmptyState>
+            <S.EmptyState>{entryPanel.emptyStates.noAttachedNotes}</S.EmptyState>
           ) : (
             <S.EntryList>
               {attachedNotes.map((note) => (
@@ -350,7 +352,7 @@ export const EntryPanel = ({
 
   const renderTasks = () => {
     if (tasks.length === 0) {
-      return <S.EmptyState>No tasks</S.EmptyState>;
+      return <S.EmptyState>{entryPanel.emptyStates.noTasks}</S.EmptyState>;
     }
 
     return (
@@ -376,10 +378,10 @@ export const EntryPanel = ({
               </S.TaskRow>
               <S.EntryActions>
                 <S.ActionButton onClick={() => onEditTask(task.id, task.title)}>
-                  Edit
+                  {entryPanel.tasks.editButton}
                 </S.ActionButton>
                 <S.ActionButton onClick={() => onDeleteTask(task.id)}>
-                  Delete
+                  {entryPanel.tasks.deleteButton}
                 </S.ActionButton>
               </S.EntryActions>
             </S.EntryHeader>
@@ -395,32 +397,33 @@ export const EntryPanel = ({
         <S.TargetGrid>
           <S.SectionCard>
             <S.SectionHeader>
-              <S.SectionTitle>Particular Date</S.SectionTitle>
+              <S.SectionTitle>{entryPanel.sections.particularDate}</S.SectionTitle>
               <S.SectionCaption>{selectedDateLabel}</S.SectionCaption>
             </S.SectionHeader>
             <S.HintCard>
-              Add a {addMode === "note" ? "note" : "task"} only for the selected
-              day.
+              {addMode === "note"
+                ? entryPanel.add.particularDateHint.note
+                : entryPanel.add.particularDateHint.task}
             </S.HintCard>
           </S.SectionCard>
           <S.SectionCard>
             <S.SectionHeader>
-              <S.SectionTitle>Selected Range</S.SectionTitle>
+              <S.SectionTitle>{entryPanel.sections.selectedRange}</S.SectionTitle>
               <S.SectionCaption>
-                {selectedRangeLabel ?? "Select a range on the calendar"}
+                {selectedRangeLabel ?? entryPanel.add.selectedRangeCaptionFallback}
               </S.SectionCaption>
             </S.SectionHeader>
             <S.HintCard>
               {hasActiveRange
-                ? `Add across the selected range when the range is complete.`
-                : "Choose a start date and end date to add across multiple days."}
+                ? entryPanel.add.selectedRangeHintActive
+                : entryPanel.add.selectedRangeHintInactive}
             </S.HintCard>
           </S.SectionCard>
         </S.TargetGrid>
 
         <S.SectionCard>
           <S.SectionHeader>
-            <S.SectionTitle>Task / Note Composer</S.SectionTitle>
+            <S.SectionTitle>{entryPanel.sections.composer}</S.SectionTitle>
             <S.SectionCaption>{editingLabel ?? addTargetLabel}</S.SectionCaption>
           </S.SectionHeader>
           <S.SegmentRow>
@@ -438,7 +441,11 @@ export const EntryPanel = ({
           <S.TextArea
             value={draft}
             onChange={(event) => onDraftChange(event.target.value)}
-            placeholder={addMode === "note" ? "Write note" : "Write task"}
+            placeholder={
+              addMode === "note"
+                ? entryPanel.add.notePlaceholder
+                : entryPanel.add.taskPlaceholder
+            }
           />
           <S.HintCard>{addTargetLabel}</S.HintCard>
           {errorMessage ? <S.ErrorText>{errorMessage}</S.ErrorText> : null}
@@ -446,14 +453,16 @@ export const EntryPanel = ({
             <S.SaveButton $accentColor={accentColor} onClick={onSave}>
               {editingLabel
                 ? addMode === "note"
-                  ? "Update Note"
-                  : "Update Task"
+                  ? entryPanel.add.updateNoteButton
+                  : entryPanel.add.updateTaskButton
                 : addMode === "note"
-                  ? "Add Note"
-                  : "Add Task"}
+                  ? entryPanel.add.addNoteButton
+                  : entryPanel.add.addTaskButton}
             </S.SaveButton>
             {editingLabel ? (
-              <S.SecondaryButton onClick={onCancelEdit}>Cancel</S.SecondaryButton>
+              <S.SecondaryButton onClick={onCancelEdit}>
+                {entryPanel.add.cancelButton}
+              </S.SecondaryButton>
             ) : null}
           </S.FooterRow>
         </S.SectionCard>

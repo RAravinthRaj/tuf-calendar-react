@@ -8,7 +8,7 @@ import {
   CalendarApiResponse,
   CalendarMonthEntries,
   getMonthEntries,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export const fetchMonthEntries = async (
   monthKey: string,
@@ -21,3 +21,4 @@ export const fetchMonthEntries = async (
     payload: getMonthEntries(monthKey),
   };
 };
+

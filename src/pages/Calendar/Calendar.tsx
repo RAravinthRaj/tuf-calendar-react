@@ -7,6 +7,7 @@ Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 import { useEffect, useMemo, useState } from "react";
 import Confetti from "react-confetti";
 import { useTheme } from "../../hooks";
+import { Loader } from "../../components";
 import {
   ContainerComp,
   EntryPanel,
@@ -15,20 +16,8 @@ import {
   TabSwitcher,
 } from "./components";
 import { CALENDAR_CONFIG } from "./config";
-import CalendarService, {
-  CalendarAttachedNote,
-  CalendarHoliday,
-  CalendarNoteScope,
-  CalendarTask,
-  deleteHoliday,
-  deleteAttachedNote,
-  getAttachedNotes,
-  getAttachedNotesForDate,
-  getHoliday,
-  getMonthHolidays,
-  saveAttachedNote,
-  saveHoliday,
-} from "./services";
+import CalendarService from "./services";
+
 import {
   useAddNoteStore,
   useAddTaskStore,
@@ -48,7 +37,13 @@ import {
   getDateFromKey,
   getDateKeysInRange,
   getMonthDateFromKey,
-} from "./utils/date";
+} from "../../utils/date";
+import {
+  CalendarAttachedNote,
+  CalendarHoliday,
+  CalendarNoteScope,
+  CalendarTask,
+} from "../../db";
 
 const CalendarPage = () => {
   const theme = useTheme();
@@ -74,14 +69,30 @@ const CalendarPage = () => {
     useAddNoteStore();
   const { addTaskResponse, addTaskError, fetchAddTask, resetAddTask } =
     useAddTaskStore();
-  const { updateNoteResponse, updateNoteError, fetchUpdateNote, resetUpdateNote } =
-    useUpdateNoteStore();
-  const { deleteNoteResponse, deleteNoteError, fetchDeleteNote, resetDeleteNote } =
-    useDeleteNoteStore();
-  const { updateTaskResponse, updateTaskError, fetchUpdateTask, resetUpdateTask } =
-    useUpdateTaskStore();
-  const { deleteTaskResponse, deleteTaskError, fetchDeleteTask, resetDeleteTask } =
-    useDeleteTaskStore();
+  const {
+    updateNoteResponse,
+    updateNoteError,
+    fetchUpdateNote,
+    resetUpdateNote,
+  } = useUpdateNoteStore();
+  const {
+    deleteNoteResponse,
+    deleteNoteError,
+    fetchDeleteNote,
+    resetDeleteNote,
+  } = useDeleteNoteStore();
+  const {
+    updateTaskResponse,
+    updateTaskError,
+    fetchUpdateTask,
+    resetUpdateTask,
+  } = useUpdateTaskStore();
+  const {
+    deleteTaskResponse,
+    deleteTaskError,
+    fetchDeleteTask,
+    resetDeleteTask,
+  } = useDeleteTaskStore();
   const { toggleTaskResponse, fetchToggleTask, resetToggleTask } =
     useToggleTaskStore();
   const { fetchMonthEntriesResponse, fetchFetchMonthEntries } =
@@ -90,22 +101,29 @@ const CalendarPage = () => {
   const [todayTasks, setTodayTasks] = useState<CalendarTask[]>([]);
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
   const [attachedNoteDraft, setAttachedNoteDraft] = useState("");
-  const [attachedNotes, setAttachedNotes] = useState<CalendarAttachedNote[]>([]);
+  const [attachedNotes, setAttachedNotes] = useState<CalendarAttachedNote[]>(
+    [],
+  );
   const [attachedNoteScope, setAttachedNoteScope] =
     useState<CalendarNoteScope>("month");
-  const [attachedNoteError, setAttachedNoteError] = useState<string | null>(null);
+  const [attachedNoteError, setAttachedNoteError] = useState<string | null>(
+    null,
+  );
   const [editingAttachedNote, setEditingAttachedNote] =
     useState<CalendarAttachedNote | null>(null);
   const [rangeAddError, setRangeAddError] = useState<string | null>(null);
   const [holidayDraft, setHolidayDraft] = useState("");
   const [holidayError, setHolidayError] = useState<string | null>(null);
-  const [monthHolidays, setMonthHolidays] = useState<Record<string, CalendarHoliday>>(
-    {},
+  const [monthHolidays, setMonthHolidays] = useState<
+    Record<string, CalendarHoliday>
+  >({});
+  const [activeHoliday, setActiveHoliday] = useState<CalendarHoliday | null>(
+    null,
   );
-  const [activeHoliday, setActiveHoliday] = useState<CalendarHoliday | null>(null);
   const [showHolidayCelebration, setShowHolidayCelebration] = useState(false);
   const [confettiBurstKey, setConfettiBurstKey] = useState(0);
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [editingEntry, setEditingEntry] = useState<{
     type: "note" | "task";
     id: string;
@@ -115,6 +133,14 @@ const CalendarPage = () => {
   const isMobileViewport = () =>
     typeof window !== "undefined" &&
     window.matchMedia("(max-width: 768px)").matches;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 2000);
+
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     resetFetchNotes();
@@ -128,12 +154,12 @@ const CalendarPage = () => {
   }, [visibleMonthKey]);
 
   useEffect(() => {
-    setMonthHolidays(getMonthHolidays(visibleMonthKey));
+    setMonthHolidays(CalendarService.getMonthHolidaysAPI(visibleMonthKey));
   }, [visibleMonthKey, selectedDateKey]);
 
   useEffect(() => {
     setAttachedNotes(
-      getAttachedNotes({
+      CalendarService.getAttachedNotesAPI({
         scope: attachedNoteScope,
         monthKey: visibleMonthKey,
         dateKey: selectedDateKey,
@@ -168,7 +194,7 @@ const CalendarPage = () => {
   }, []);
 
   useEffect(() => {
-    const holiday = getHoliday(selectedDateKey);
+    const holiday = CalendarService.getHolidayAPI(selectedDateKey);
 
     setHolidayDraft(holiday?.label ?? "");
 
@@ -328,7 +354,7 @@ const CalendarPage = () => {
       : `${addMode === "note" ? "This note" : "This task"} will be added to ${selectedDateLabel}.`;
   const selectedDayAttachedNotes = useMemo(
     () =>
-      getAttachedNotesForDate({
+      CalendarService.getAttachedNotesForDateAPI({
         monthKey: visibleMonthKey,
         dateKey: selectedDateKey,
       }),
@@ -400,7 +426,9 @@ const CalendarPage = () => {
           await fetchFetchTasks(selectedDateKey);
           await fetchFetchMonthEntries(visibleMonthKey);
         } catch (error: any) {
-          setRangeAddError(error?.message ?? "Unable to save across the selected range.");
+          setRangeAddError(
+            error?.message ?? "Unable to save across the selected range.",
+          );
         }
       })();
 
@@ -483,7 +511,7 @@ const CalendarPage = () => {
 
   const handleSelectDate = (date: Date) => {
     const nextDateKey = formatDateKey(date);
-    const holiday = getHoliday(nextDateKey);
+    const holiday = CalendarService.getHolidayAPI(nextDateKey);
 
     selectDate(date, true);
     setAttachedNoteError(null);
@@ -503,7 +531,7 @@ const CalendarPage = () => {
 
   const handleSaveAttachedNote = () => {
     try {
-      const notes = saveAttachedNote({
+      const notes = CalendarService.saveAttachedNoteAPI({
         noteId: editingAttachedNote?.id,
         scope: attachedNoteScope,
         monthKey: visibleMonthKey,
@@ -518,13 +546,13 @@ const CalendarPage = () => {
           attachedNoteScope === "range"
             ? editingAttachedNote?.scope === "range"
               ? editingAttachedNote.startDateKey
-              : rangeStartDateKey ?? undefined
+              : (rangeStartDateKey ?? undefined)
             : undefined,
         endDateKey:
           attachedNoteScope === "range"
             ? editingAttachedNote?.scope === "range"
               ? editingAttachedNote.endDateKey
-              : rangeEndDateKey ?? undefined
+              : (rangeEndDateKey ?? undefined)
             : undefined,
       });
 
@@ -539,9 +567,9 @@ const CalendarPage = () => {
 
   const handleDeleteAttachedNote = (noteId: string) => {
     try {
-      deleteAttachedNote(noteId);
+      CalendarService.deleteAttachedNoteAPI(noteId);
       setAttachedNotes(
-        getAttachedNotes({
+        CalendarService.getAttachedNotesAPI({
           scope: attachedNoteScope,
           monthKey: visibleMonthKey,
           dateKey: selectedDateKey,
@@ -576,12 +604,12 @@ const CalendarPage = () => {
 
   const handleSaveHoliday = () => {
     try {
-      const holiday = saveHoliday({
+      const holiday = CalendarService.saveHolidayAPI({
         dateKey: selectedDateKey,
         label: holidayDraft,
       });
 
-      setMonthHolidays(getMonthHolidays(visibleMonthKey));
+      setMonthHolidays(CalendarService.getMonthHolidaysAPI(visibleMonthKey));
       setActiveHoliday(holiday);
       setShowHolidayCelebration(true);
       setConfettiBurstKey((value) => value + 1);
@@ -593,14 +621,31 @@ const CalendarPage = () => {
 
   const handleDeleteHoliday = () => {
     try {
-      deleteHoliday(selectedDateKey);
-      setMonthHolidays(getMonthHolidays(visibleMonthKey));
+      CalendarService.deleteHolidayAPI(selectedDateKey);
+      setMonthHolidays(CalendarService.getMonthHolidaysAPI(visibleMonthKey));
       setHolidayDraft("");
       setHolidayError(null);
     } catch (error: any) {
       setHolidayError(error?.message ?? "Unable to remove holiday.");
     }
   };
+
+  if (isInitialLoading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "var(--app-bg)",
+          padding: "24px",
+        }}
+      >
+        <Loader loadingText="Loading calendar..." />
+      </div>
+    );
+  }
 
   return (
     <ContainerComp

@@ -31,6 +31,96 @@ export const CALENDAR_CONFIG = {
     { key: "november", label: "November", accent: "#7D7367" },
     { key: "december", label: "December", accent: "#5A86B3" },
   ] as const,
+  content: {
+    container: {
+      closeMobilePanelAriaLabel: "Close mobile panel",
+    },
+    monthGrid: {
+      todayTodoLabel: "Today To-do",
+      addTaskForTodayAriaLabel: "Add task for today",
+      nothingPlannedForToday: "Nothing planned for today.",
+      openTodayButton: "Open Today",
+      previousMonthAriaLabel: "Previous month",
+      nextMonthAriaLabel: "Next month",
+      rangeLegend: {
+        start: "Start",
+        end: "End",
+        inRange: "In Range",
+      },
+      clearRangeButton: "Clear Range",
+      rangeHintPrefix: "Pick a start day, then an end day. Holidays this month:",
+      holidayMarker: "Holiday",
+    },
+    entryPanel: {
+      attachedScopeFallback: "Select a date range on the calendar",
+      sections: {
+        selectedDayNotes: "Selected Day Notes",
+        rangeNotes: "Range Notes",
+        holidayMarker: "Holiday Marker",
+        integratedNotes: "Integrated Notes",
+        particularDate: "Particular Date",
+        selectedRange: "Selected Range",
+        composer: "Task / Note Composer",
+      },
+      emptyStates: {
+        noDayNotes: "No notes for this day yet.",
+        noRangeNotes: "No range notes for this day.",
+        noAttachedNotes: "No attached notes in this section yet.",
+        noTasks: "No tasks",
+      },
+      noteMeta: {
+        rangePrefix: "Range note:",
+        rangeConnector: "to",
+        monthMemoPrefix: "Month memo for",
+        selectedDateNote: "Selected date note",
+        rangeNotesCaptionFallback: "Notes linked to selected ranges",
+      },
+      holiday: {
+        inputPlaceholder: "Example: Founders' Day",
+        markedPrefix: "Marked as holiday:",
+        hint:
+          "Pick a date and give it a holiday label to show a popup and confetti when that day is opened.",
+        updateButton: "Update Holiday",
+        saveButton: "Save Holiday",
+        removeButton: "Remove Holiday",
+      },
+      attachedNotes: {
+        scopeOptions: [
+          { key: "month", label: "Month Memo" },
+          { key: "date", label: "Selected Date" },
+          { key: "range", label: "Selected Range" },
+        ] as const,
+        rangeHint:
+          "Select a start date and an end date on the grid to attach a note to a range.",
+        textAreaPlaceholderPrefix: "Write a note for",
+        updateButton: "Update Note",
+        saveButton: "Save Note",
+        cancelButton: "Cancel",
+      },
+      tasks: {
+        editButton: "Edit",
+        deleteButton: "Delete",
+      },
+      add: {
+        particularDateHint: {
+          note: "Add a note only for the selected day.",
+          task: "Add a task only for the selected day.",
+        },
+        selectedRangeCaptionFallback: "Select a range on the calendar",
+        selectedRangeHintActive:
+          "Add across the selected range when the range is complete.",
+        selectedRangeHintInactive:
+          "Choose a start date and end date to add across multiple days.",
+        notePlaceholder: "Write note",
+        taskPlaceholder: "Write task",
+        updateNoteButton: "Update Note",
+        updateTaskButton: "Update Task",
+        addNoteButton: "Add Note",
+        addTaskButton: "Add Task",
+        cancelButton: "Cancel",
+      },
+    },
+  },
 };
 
 export type CalendarTabKey = (typeof CALENDAR_CONFIG.tabs)[number]["key"];

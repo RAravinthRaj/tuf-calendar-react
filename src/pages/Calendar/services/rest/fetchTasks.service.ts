@@ -8,7 +8,7 @@ import {
   CalendarApiResponse,
   CalendarTask,
   getDateEntries,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export const fetchTasks = async (
   dateKey: string,
@@ -17,9 +17,8 @@ export const fetchTasks = async (
     throw new Error("Missing date key.");
   }
 
-  const entries = getDateEntries(dateKey);
-
   return {
-    payload: entries.tasks,
+    payload: getDateEntries(dateKey).tasks,
   };
 };
+

@@ -10,7 +10,7 @@ import {
   getDateEntries,
   readCalendarDB,
   writeCalendarDB,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export interface DeleteTaskParams {
   dateKey: string;
@@ -39,3 +39,4 @@ export const deleteTask = async ({
 
   return { payload: tasks };
 };
+

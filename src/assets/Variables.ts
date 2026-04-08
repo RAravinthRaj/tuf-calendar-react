@@ -5,18 +5,18 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import loader from "../assets/lotties/loader.json";
-import januaryHero from "./images/calendar/posters/january-poster.svg";
-import februaryHero from "./images/calendar/posters/february-poster.svg";
-import marchHero from "./images/calendar/posters/march-poster.svg";
-import aprilHero from "./images/calendar/posters/april-poster.svg";
-import mayHero from "./images/calendar/posters/may-poster.svg";
-import juneHero from "./images/calendar/posters/june-poster.svg";
-import julyHero from "./images/calendar/posters/july-poster.svg";
-import augustHero from "./images/calendar/posters/august-poster.svg";
-import septemberHero from "./images/calendar/posters/september-poster.svg";
-import octoberHero from "./images/calendar/posters/october-poster.svg";
-import novemberHero from "./images/calendar/posters/november-poster.svg";
-import decemberHero from "./images/calendar/posters/december-poster.svg";
+import januaryHero from "./images/january-poster.svg";
+import februaryHero from "./images/february-poster.svg";
+import marchHero from "./images/march-poster.svg";
+import aprilHero from "./images/april-poster.svg";
+import mayHero from "./images/may-poster.svg";
+import juneHero from "./images/june-poster.svg";
+import julyHero from "./images/july-poster.svg";
+import augustHero from "./images/august-poster.svg";
+import septemberHero from "./images/september-poster.svg";
+import octoberHero from "./images/october-poster.svg";
+import novemberHero from "./images/november-poster.svg";
+import decemberHero from "./images/december-poster.svg";
 
 const sharedImages = {
   logo: "/logo.jpeg",

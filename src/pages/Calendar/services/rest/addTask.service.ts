@@ -5,13 +5,13 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import {
+  buildCalendarId,
   CalendarApiResponse,
   CalendarTask,
-  buildCalendarId,
   getDateEntries,
   readCalendarDB,
   writeCalendarDB,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export interface AddTaskParams {
   dateKey: string;
@@ -46,7 +46,6 @@ export const addTask = async ({
     },
   });
 
-  return {
-    payload: tasks,
-  };
+  return { payload: tasks };
 };
+

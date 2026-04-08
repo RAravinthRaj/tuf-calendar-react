@@ -10,7 +10,7 @@ import {
   getDateEntries,
   readCalendarDB,
   writeCalendarDB,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export interface DeleteNoteParams {
   dateKey: string;
@@ -39,3 +39,4 @@ export const deleteNote = async ({
 
   return { payload: notes };
 };
+

@@ -8,7 +8,7 @@ import {
   CalendarApiResponse,
   CalendarNote,
   getDateEntries,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export const fetchNotes = async (
   dateKey: string,
@@ -17,9 +17,8 @@ export const fetchNotes = async (
     throw new Error("Missing date key.");
   }
 
-  const entries = getDateEntries(dateKey);
-
   return {
-    payload: entries.notes,
+    payload: getDateEntries(dateKey).notes,
   };
 };
+

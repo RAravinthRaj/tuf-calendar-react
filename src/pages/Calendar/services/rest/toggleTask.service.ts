@@ -10,7 +10,7 @@ import {
   getDateEntries,
   readCalendarDB,
   writeCalendarDB,
-} from "./helpers/calendarDb";
+} from "../../../../db";
 
 export interface ToggleTaskParams {
   dateKey: string;
@@ -39,7 +39,6 @@ export const toggleTask = async ({
     },
   });
 
-  return {
-    payload: tasks,
-  };
+  return { payload: tasks };
 };
+

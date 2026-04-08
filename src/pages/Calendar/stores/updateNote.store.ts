@@ -5,7 +5,9 @@ Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import { create } from "zustand";
-import CalendarService, { CalendarNote, UpdateNoteParams } from "../services";
+import CalendarService from "../services";
+import { CalendarNote } from "../../../db";
+import { UpdateNoteParams } from "../services/rest";
 
 type State = {
   updateNoteLoading: boolean;

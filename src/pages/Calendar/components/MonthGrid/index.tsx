@@ -4,8 +4,9 @@ Unauthorized copying of this file, via any medium, is strictly prohibited.
 Proprietary and confidential.
 Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
+import { CALENDAR_CONFIG } from "../../config";
 import { CalendarTask } from "../../services";
-import { CalendarDayItem } from "../../utils/date";
+import { CalendarDayItem } from "../../../../utils/date";
 import * as S from "./styles";
 
 export interface IMonthGrid {
@@ -43,17 +44,19 @@ export const MonthGrid = ({
   onClearRange,
   onSelectDate,
 }: IMonthGrid) => {
+  const { monthGrid } = CALENDAR_CONFIG.content;
+
   return (
     <S.Wrapper>
       <S.TodayRail $accentColor={accentColor}>
         <S.TodayHead>
-          <S.TodayLabel>Today To-do</S.TodayLabel>
+          <S.TodayLabel>{monthGrid.todayTodoLabel}</S.TodayLabel>
           <S.TodayHeadActions>
             <S.TodayBadge>{todayTasks.length}</S.TodayBadge>
             <S.TodayAddButton
               $accentColor={accentColor}
               onClick={onAddTodayTask}
-              aria-label="Add task for today"
+              aria-label={monthGrid.addTaskForTodayAriaLabel}
             >
               +
             </S.TodayAddButton>
@@ -61,7 +64,7 @@ export const MonthGrid = ({
         </S.TodayHead>
         <S.TodayList>
           {todayTasks.length === 0 ? (
-            <S.TodayEmpty>Nothing planned for today.</S.TodayEmpty>
+            <S.TodayEmpty>{monthGrid.nothingPlannedForToday}</S.TodayEmpty>
           ) : (
             todayTasks.slice(0, 5).map((task) => (
               <S.TodayItem key={task.id} $completed={task.completed}>
@@ -72,7 +75,7 @@ export const MonthGrid = ({
           )}
         </S.TodayList>
         <S.TodayAction $accentColor={accentColor} onClick={onOpenTask}>
-          Open Today
+          {monthGrid.openTodayButton}
         </S.TodayAction>
       </S.TodayRail>
 
@@ -81,11 +84,17 @@ export const MonthGrid = ({
           <S.Title>{title}</S.Title>
           <S.Actions>
             <S.NavRail>
-              <S.NavButton onClick={onPreviousMonth} aria-label="Previous month">
+              <S.NavButton
+                onClick={onPreviousMonth}
+                aria-label={monthGrid.previousMonthAriaLabel}
+              >
                 &#8249;
               </S.NavButton>
               <S.NavDivider />
-              <S.NavButton onClick={onNextMonth} aria-label="Next month">
+              <S.NavButton
+                onClick={onNextMonth}
+                aria-label={monthGrid.nextMonthAriaLabel}
+              >
                 &#8250;
               </S.NavButton>
             </S.NavRail>
@@ -103,28 +112,31 @@ export const MonthGrid = ({
         <S.RangeToolbar>
           <S.RangeLegend>
             <S.RangeLegendItem>
-              <S.RangeLegendSwatch $accentColor={accentColor} $variant="start" />
-              Start
+              <S.RangeLegendSwatch
+                $accentColor={accentColor}
+                $variant="start"
+              />
+              {monthGrid.rangeLegend.start}
             </S.RangeLegendItem>
             <S.RangeLegendItem>
               <S.RangeLegendSwatch $accentColor={accentColor} $variant="end" />
-              End
+              {monthGrid.rangeLegend.end}
             </S.RangeLegendItem>
             <S.RangeLegendItem>
               <S.RangeLegendSwatch
                 $accentColor={accentColor}
                 $variant="between"
               />
-              In Range
+              {monthGrid.rangeLegend.inRange}
             </S.RangeLegendItem>
           </S.RangeLegend>
           {hasActiveRange ? (
             <S.ClearRangeButton onClick={onClearRange}>
-              Clear Range
+              {monthGrid.clearRangeButton}
             </S.ClearRangeButton>
           ) : (
             <S.RangeHint>
-              Pick a start day, then an end day. Holidays this month: {holidayCount}
+              {monthGrid.rangeHintPrefix} {holidayCount}
             </S.RangeHint>
           )}
         </S.RangeToolbar>
@@ -147,9 +159,13 @@ export const MonthGrid = ({
               >
                 <S.DateNumber>{day.date.getDate()}</S.DateNumber>
                 {day.isHoliday ? (
-                  <S.HolidayMarker $isSelected={day.isSelected}>Holiday</S.HolidayMarker>
+                  <S.HolidayMarker $isSelected={day.isSelected}>
+                    {monthGrid.holidayMarker}
+                  </S.HolidayMarker>
                 ) : null}
-                {day.isToday ? <S.TodayMarker $isSelected={day.isSelected} /> : null}
+                {day.isToday ? (
+                  <S.TodayMarker $isSelected={day.isSelected} />
+                ) : null}
                 <S.CountLabel>
                   {count > 0 ? (
                     <S.Dot
