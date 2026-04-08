@@ -16,7 +16,8 @@ export const Row = styled.div`
   border: 1px solid rgba(168, 137, 100, 0.14);
 
   @media (max-width: 560px) {
-    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 4px;
   }
 `;
 
@@ -39,6 +40,9 @@ export const Button = styled.button<{ $active: boolean; $accentColor: string }>`
     $active ? "0 10px 18px rgba(0, 0, 0, 0.14)" : "none"};
 
   @media (max-width: 560px) {
-    min-height: 44px;
+    min-height: 40px;
+    padding: 10px 6px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
   }
 `;

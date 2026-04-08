@@ -50,20 +50,14 @@ export const Loader = ({
       >
         <S.ModalInnerContainer $bgColor={theme.colors.white}>
           <LazyLottieAnimation loop play $useModalLoader={useModalLoader} />
-          <S.LoadingText $useModalLoader={useModalLoader}>
-            {loadingText}
-          </S.LoadingText>
         </S.ModalInnerContainer>
       </S.ModalContainer>
     );
   }
 
   return (
-    <S.LoaderMainContainer>
+    <S.LoaderMainContainer aria-label={loadingText} role="status">
       <LazyLottieAnimation loop play $useModalLoader={useModalLoader} />
-      <S.LoadingText $useModalLoader={useModalLoader}>
-        {loadingText}
-      </S.LoadingText>
     </S.LoaderMainContainer>
   );
 };

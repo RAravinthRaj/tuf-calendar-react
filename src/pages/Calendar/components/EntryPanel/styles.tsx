@@ -94,10 +94,6 @@ export const SectionCaption = styled.div`
 export const SegmentRow = styled.div`
   display: flex;
   gap: 8px;
-
-  @media (max-width: 560px) {
-    flex-direction: column;
-  }
 `;
 
 export const SegmentButton = styled.button<{
@@ -115,6 +111,11 @@ export const SegmentButton = styled.button<{
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+
+  @media (max-width: 560px) {
+    padding: 9px 8px;
+    font-size: 12px;
+  }
 `;
 
 export const EmptyState = styled.div`
@@ -226,18 +227,15 @@ export const TextInput = styled.input`
 export const ScopeRow = styled.div`
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
-
-  @media (max-width: 560px) {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
+  flex-wrap: nowrap;
 `;
 
 export const ScopeButton = styled.button<{
   $active: boolean;
   $accentColor: string;
 }>`
+  flex: 1;
+  min-width: 0;
   border-radius: 999px;
   border: 1px solid
     ${({ $active, $accentColor }) => ($active ? $accentColor : "#ddcdb7")};
@@ -248,6 +246,12 @@ export const ScopeButton = styled.button<{
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
+
+  @media (max-width: 560px) {
+    padding: 8px 6px;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
 `;
 
 export const SaveButton = styled.button<{ $accentColor: string }>`

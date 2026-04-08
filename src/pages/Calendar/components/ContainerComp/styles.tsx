@@ -53,14 +53,16 @@ const tearPagePrev = keyframes`
 
 export const Page = styled.main`
   min-height: 100vh;
-  padding: 24px 22px 30px;
+  min-height: 100dvh;
+  height: 100dvh;
+  padding: 18px;
   background:
     radial-gradient(circle at 12% 8%, rgba(255, 246, 228, 0.72), transparent 20%),
     radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.2), transparent 18%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 26%),
     var(--app-bg);
   position: relative;
-  overflow-x: clip;
+  overflow: hidden;
 
   &::before {
     content: "";
@@ -87,7 +89,11 @@ export const Page = styled.main`
   }
 
   @media (max-width: 768px) {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
     padding: 12px 10px 24px;
+    overflow: visible;
 
     &::before,
     &::after {
@@ -99,10 +105,12 @@ export const Page = styled.main`
 export const MainContainer = styled.section`
   max-width: 1720px;
   margin: 0 auto;
+  height: 100%;
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1.72fr) minmax(360px, 0.78fr);
   gap: 34px;
-  align-items: start;
+  align-items: stretch;
   position: relative;
 
   @media (max-width: 1220px) {
@@ -111,6 +119,7 @@ export const MainContainer = styled.section`
   }
 
   @media (max-width: 980px) {
+    height: auto;
     grid-template-columns: 1fr;
     gap: 18px;
   }
@@ -118,46 +127,58 @@ export const MainContainer = styled.section`
 
 export const WallSheet = styled.div`
   position: relative;
-  padding-top: 46px;
+  height: 100%;
+  min-height: 0;
+  padding-top: 24px;
 
   @media (max-width: 980px) {
-    padding-top: 28px;
+    padding-top: 18px;
+    height: auto;
   }
 `;
 
 export const Binder = styled.div`
   position: absolute;
   top: 0;
-  left: 40px;
-  right: 40px;
-  height: 34px;
+  left: 30px;
+  right: 30px;
+  height: 40px;
   display: flex;
   justify-content: space-between;
   pointer-events: none;
   z-index: 2;
 
   span {
-    width: 18px;
-    height: 18px;
-    border: 3px solid var(--ring);
+    width: 24px;
+    height: 24px;
+    border: 4px solid var(--ring);
     border-radius: 999px;
     border-bottom-color: transparent;
     background: transparent;
+    transform: translateY(8px);
   }
 
   @media (max-width: 768px) {
-    left: 18px;
-    right: 18px;
+    left: 14px;
+    right: 14px;
+    height: 22px;
 
     span {
-      width: 14px;
-      height: 14px;
-      border-width: 2px;
+      width: 16px;
+      height: 16px;
+      border-width: 3px;
+      transform: translateY(3px);
+    }
+
+    span:nth-child(even) {
+      display: none;
     }
   }
 `;
 
 export const CalendarCard = styled.div<{ $direction: "next" | "prev" }>`
+  height: 100%;
+  min-height: 0;
   border-radius: 22px;
   overflow: hidden;
   background: var(--sheet-bg);
@@ -166,6 +187,8 @@ export const CalendarCard = styled.div<{ $direction: "next" | "prev" }>`
     0 12px 24px rgba(66, 47, 22, 0.12);
   position: relative;
   border: 1px solid rgba(140, 108, 72, 0.14);
+  display: flex;
+  flex-direction: column;
   animation: ${({ $direction }) =>
     $direction === "next"
       ? css`${tearPageNext} 700ms cubic-bezier(0.2, 0.9, 0.2, 1)`
@@ -174,9 +197,10 @@ export const CalendarCard = styled.div<{ $direction: "next" | "prev" }>`
   &::before {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: 16px 0 0;
+    border-top: 3px solid rgba(140, 108, 72, 0.18);
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 24%),
       linear-gradient(90deg, rgba(117, 88, 58, 0.06), transparent 22%);
     pointer-events: none;
   }
@@ -195,6 +219,7 @@ export const CalendarCard = styled.div<{ $direction: "next" | "prev" }>`
   }
 
   @media (max-width: 980px) {
+    height: auto;
     border-radius: 22px;
 
     &::after {
@@ -204,10 +229,13 @@ export const CalendarCard = styled.div<{ $direction: "next" | "prev" }>`
 `;
 
 export const ContentSection = styled.div`
-  padding: 0 32px 34px;
+  flex: 1;
+  min-height: 0;
+  padding: 0 28px 28px;
+  display: flex;
 
   @media (max-width: 1100px) {
-    padding: 0 22px 24px;
+    padding: 0 22px 22px;
   }
 
   @media (max-width: 768px) {
@@ -219,6 +247,8 @@ export const ContentGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
+  width: 100%;
+  min-height: 0;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -226,6 +256,8 @@ export const ContentGrid = styled.div`
 `;
 
 export const SidePanel = styled.aside`
+  height: 100%;
+  min-height: 0;
   border-radius: 32px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 248, 237, 0.88)),
@@ -239,10 +271,10 @@ export const SidePanel = styled.aside`
   flex-direction: column;
   gap: 18px;
   position: sticky;
-  top: 26px;
-  max-height: calc(100vh - 40px);
-  overflow: auto;
-  margin-top: 74px;
+  top: 0;
+  max-height: 100%;
+  overflow: hidden;
+  margin-top: 0;
 
   &::before {
     content: "";
@@ -256,6 +288,7 @@ export const SidePanel = styled.aside`
   @media (max-width: 980px) {
     position: static;
     top: auto;
+    height: auto;
     max-height: none;
     overflow: visible;
     border-radius: 24px;
@@ -266,6 +299,31 @@ export const SidePanel = styled.aside`
     &::before {
       display: none;
     }
+  }
+`;
+
+export const PanelBody = styled.div`
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  @media (max-width: 980px) {
+    overflow: visible;
+    padding-right: 0;
   }
 `;
 
@@ -290,26 +348,6 @@ export const PanelDate = styled.h2`
   line-height: 1.05;
   letter-spacing: 0.02em;
   font-family: "Source Serif Pro", Georgia, serif;
-`;
-
-export const ThemeChip = styled.button<{ $themeMode: "light" | "dark" }>`
-  border: 1px solid
-    ${({ $themeMode }) => ($themeMode === "light" ? "#141414" : "#f5f1e8")};
-  background: ${({ $themeMode }) =>
-    $themeMode === "light" ? "#141414" : "#f5f1e8"};
-  color: ${({ $themeMode }) => ($themeMode === "light" ? "#ffffff" : "#141414")};
-  border-radius: 999px;
-  padding: 10px 14px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-
-  @media (max-width: 640px) {
-    align-self: stretch;
-    min-height: 42px;
-  }
 `;
 
 export const MobilePanelOverlay = styled.div`

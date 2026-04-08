@@ -37,9 +37,11 @@ const flipSlidePrev = keyframes`
 
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
-  gap: 30px;
-  margin-top: 18px;
+  grid-template-columns: minmax(180px, 228px) minmax(0, 1fr);
+  gap: 22px;
+  margin-top: 10px;
+  min-height: 0;
+  align-items: stretch;
 
   @media (max-width: 920px) {
     grid-template-columns: 1fr;
@@ -55,7 +57,7 @@ export const Wrapper = styled.div`
 export const TodayRail = styled.div<{ $accentColor: string }>`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   align-self: stretch;
   position: relative;
   background:
@@ -67,7 +69,7 @@ export const TodayRail = styled.div<{ $accentColor: string }>`
     var(--surface-card);
   border: 1px solid var(--surface-border);
   border-radius: 28px;
-  padding: 20px 18px 18px;
+  padding: 18px 16px 16px;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 
@@ -155,20 +157,13 @@ export const TodayAddButton = styled.button<{ $accentColor: string }>`
     transform: translateY(-1px);
     box-shadow: 0 14px 24px rgba(0, 0, 0, 0.18);
   }
-
-  @media (max-width: 680px) {
-    display: flex;
-    width: 38px;
-    height: 38px;
-    font-size: 1.55rem;
-  }
 `;
 
 export const TodayList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-height: 190px;
+  gap: 8px;
+  min-height: 0;
 
   @media (max-width: 920px) {
     min-height: 0;
@@ -183,12 +178,12 @@ export const TodayEmpty = styled.div`
 
 export const TodayItem = styled.div<{ $completed: boolean }>`
   position: relative;
-  padding: 12px 12px 12px 28px;
+  padding: 10px 10px 10px 26px;
   border-radius: 18px;
   background: var(--control-bg);
   color: var(--text-strong);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.4;
   text-decoration: ${({ $completed }) =>
     $completed ? "line-through" : "none"};
   opacity: ${({ $completed }) => ($completed ? 0.58 : 1)};
@@ -197,7 +192,7 @@ export const TodayItem = styled.div<{ $completed: boolean }>`
 export const TodayPin = styled.span<{ $accentColor: string }>`
   position: absolute;
   left: 12px;
-  top: 16px;
+  top: 14px;
   width: 8px;
   height: 8px;
   border-radius: 999px;
@@ -210,7 +205,7 @@ export const TodayAction = styled.button<{ $accentColor: string }>`
   border-radius: 999px;
   background: ${({ $accentColor }) => $accentColor};
   color: #ffffff;
-  min-height: 44px;
+  min-height: 42px;
   padding: 0 16px;
   text-align: center;
   font-size: 0.9rem;
@@ -238,14 +233,18 @@ export const TodayAction = styled.button<{ $accentColor: string }>`
 
 export const CalendarSection = styled.div<{ $direction: "next" | "prev" }>`
   position: relative;
-  padding: 24px 22px 22px;
+  min-height: 0;
+  padding: 20px 20px 18px;
   border-radius: 30px 30px 24px 24px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 248, 238, 0.84)),
-    var(--sheet-bg);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 248, 238, 0.9)),
+    var(--surface-card);
+  border: 1px solid var(--surface-border);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.5),
     0 18px 34px rgba(85, 62, 31, 0.08);
+  display: flex;
+  flex-direction: column;
   animation: ${({ $direction }) =>
     $direction === "next"
       ? css`
@@ -254,16 +253,6 @@ export const CalendarSection = styled.div<{ $direction: "next" | "prev" }>`
       : css`
           ${flipSlidePrev} 520ms cubic-bezier(0.22, 1, 0.36, 1)
         `};
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    top: 14px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(171, 140, 104, 0.46), transparent);
-  }
 
   @media (max-width: 768px) {
     padding: 18px 14px 16px;
@@ -276,12 +265,12 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 22px;
+  margin-bottom: 26px;
 
   @media (max-width: 640px) {
     align-items: flex-start;
     flex-direction: column;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -297,6 +286,21 @@ export const Title = styled.h3`
 export const Actions = styled.div`
   display: flex;
   align-items: center;
+  gap: 10px;
+`;
+
+export const ClearRangeButton = styled.button`
+  border: 1px solid var(--control-border);
+  background: var(--control-bg);
+  color: var(--panel-text);
+  border-radius: 999px;
+  padding: 7px 11px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(92, 67, 37, 0.05);
 `;
 
 export const NavRail = styled.div`
@@ -305,43 +309,43 @@ export const NavRail = styled.div`
   background: var(--control-bg);
   border: 1px solid var(--control-border);
   border-radius: 999px;
-  padding: 6px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  padding: 3px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.07);
 `;
 
 export const NavButton = styled.button`
-  width: 52px;
-  height: 52px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
   border: none;
   background: transparent;
   color: var(--calendar-title);
-  font-size: 28px;
+  font-size: 18px;
   line-height: 1;
   cursor: pointer;
 
   @media (max-width: 768px) {
-    width: 42px;
-    height: 42px;
-    font-size: 22px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
   }
 `;
 
 export const NavDivider = styled.div`
   width: 1px;
-  height: 28px;
+  height: 18px;
   background: var(--control-border);
 `;
 
 export const Weekdays = styled.div`
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 22px;
 
   @media (max-width: 640px) {
     gap: 6px;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
 `;
 
@@ -356,74 +360,15 @@ export const Weekday = styled.div<{ $isWeekend: boolean }>`
   text-transform: uppercase;
 `;
 
-export const RangeToolbar = styled.div`
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
-
-export const RangeLegend = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-`;
-
-export const RangeLegendItem = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--weekday);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-`;
-
-export const RangeLegendSwatch = styled.span<{
-  $accentColor: string;
-  $variant: "start" | "end" | "between";
-}>`
-  width: 14px;
-  height: 14px;
-  border-radius: ${({ $variant }) => ($variant === "between" ? "4px" : "999px")};
-  border: 1px solid
-    ${({ $accentColor, $variant }) =>
-      $variant === "between" ? `${$accentColor}66` : `${$accentColor}dd`};
-  background: ${({ $accentColor, $variant }) =>
-    $variant === "between" ? `${$accentColor}22` : `${$accentColor}cc`};
-  box-shadow: ${({ $variant }) =>
-    $variant === "between" ? "none" : "0 4px 10px rgba(0, 0, 0, 0.08)"};
-`;
-
-export const RangeHint = styled.div`
-  color: var(--text-soft);
-  font-size: 12px;
-`;
-
-export const ClearRangeButton = styled.button`
-  border: 1px solid var(--control-border);
-  background: var(--control-bg);
-  color: var(--panel-text);
-  border-radius: 999px;
-  padding: 8px 12px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-`;
-
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 12px;
+  gap: 9px;
+  flex: 1;
+  align-content: start;
 
   @media (max-width: 920px) {
-    gap: 10px;
+    gap: 8px;
   }
 
   @media (max-width: 768px) {
@@ -445,8 +390,8 @@ export const DateCell = styled.button<{
   $accentColor: string;
 }>`
   position: relative;
-  min-height: 82px;
-  padding: 12px 7px;
+  min-height: clamp(46px, 5.5vh, 64px);
+  padding: 8px 5px;
   border: 1px solid
     ${({ $isSelected, $isToday, $isRangeStart, $isRangeEnd, $isInRange, $accentColor }) =>
       $isSelected || $isRangeStart || $isRangeEnd
@@ -471,7 +416,7 @@ export const DateCell = styled.button<{
         ? "var(--text-strong)"
         : "#8d8d8d"};
   border-radius: ${({ $isRangeStart, $isRangeEnd, $isInRange }) =>
-    $isInRange && !$isRangeStart && !$isRangeEnd ? "12px" : "18px"};
+    $isInRange && !$isRangeStart && !$isRangeEnd ? "8px" : "12px"};
   text-align: center;
   cursor: pointer;
   transition:
@@ -481,7 +426,7 @@ export const DateCell = styled.button<{
     border-color 0.2s ease;
   box-shadow: ${({ $isSelected, $isRangeStart, $isRangeEnd }) =>
     $isSelected || $isRangeStart || $isRangeEnd
-      ? "0 12px 24px rgba(0, 0, 0, 0.12)"
+      ? "0 10px 20px rgba(0, 0, 0, 0.1)"
       : "none"};
   backdrop-filter: blur(1px);
 
@@ -490,15 +435,15 @@ export const DateCell = styled.button<{
   }
 
   @media (max-width: 768px) {
-    min-height: 58px;
+    min-height: 52px;
     padding: 8px 4px;
-    border-radius: 12px;
+    border-radius: 10px;
   }
 
   @media (max-width: 560px) {
-    min-height: 52px;
-    padding: 8px 3px;
-    border-radius: 10px;
+    min-height: 48px;
+    padding: 7px 3px;
+    border-radius: 8px;
   }
 `;
 

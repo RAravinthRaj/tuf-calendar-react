@@ -6,8 +6,8 @@ Written by Aravinth Raj R <aravinthr235@gmail.com>, 2026.
 */
 import { useEffect, useMemo, useState } from "react";
 import Confetti from "react-confetti";
-import { useTheme } from "../../hooks";
 import { Loader } from "../../components";
+import { useTheme } from "../../hooks";
 import {
   ContainerComp,
   EntryPanel,
@@ -137,7 +137,7 @@ const CalendarPage = () => {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setIsInitialLoading(false);
-    }, 2000);
+    }, 4000);
 
     return () => window.clearTimeout(timer);
   }, []);
@@ -310,7 +310,6 @@ const CalendarPage = () => {
     rangeEndDateKey,
     Object.keys(monthHolidays),
   );
-  const hasActiveRange = !!rangeStartDateKey;
   const hasCompletedRange = !!(rangeStartDateKey && rangeEndDateKey);
   const selectedDateLabel = selectedDate.toLocaleDateString(undefined, {
     weekday: "short",
@@ -650,7 +649,6 @@ const CalendarPage = () => {
   return (
     <ContainerComp
       selectedDateLabel={panelDateLabel}
-      themeMode={theme.themeMode}
       mobilePanelOpen={mobilePanelOpen}
       onCloseMobilePanel={() => setMobilePanelOpen(false)}
       direction={transitionDirection}
@@ -673,7 +671,7 @@ const CalendarPage = () => {
           accentColor={monthMeta.accent}
           direction={transitionDirection}
           todayTasks={todayTasks}
-          hasActiveRange={hasActiveRange}
+          hasActiveRange={hasCompletedRange}
           holidayCount={Object.keys(monthHolidays).length}
           onOpenTask={handleOpenTodayTask}
           onAddTodayTask={handleAddTodayTask}
@@ -683,8 +681,6 @@ const CalendarPage = () => {
           onSelectDate={handleSelectDate}
         />
       }
-      themeLabel={theme.themeMode === "light" ? "Black" : "White"}
-      onThemeToggle={theme.toggleTheme}
       panelTabs={
         <TabSwitcher
           tabs={CALENDAR_CONFIG.tabs}

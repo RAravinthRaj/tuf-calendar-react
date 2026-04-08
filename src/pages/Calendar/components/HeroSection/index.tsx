@@ -22,8 +22,7 @@ export const HeroSection = ({
   return (
     <S.HeroWrapper $direction={direction}>
       <S.HeroImage src={heroImage} alt={monthLabel} />
-      <S.WaveBase />
-      <S.WaveAccent $accentColor={accentColor} />
+      <S.WaveCut $accentColor={accentColor} />
     </S.HeroWrapper>
   );
 };
